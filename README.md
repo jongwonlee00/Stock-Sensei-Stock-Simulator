@@ -1,9 +1,9 @@
 # SoftDev-Rec013-Team07
 Software Development 3308 Recitation 013 Team 07
 
-Jongwon Lee  jole2550
+Jongwon Lee  - jole2550
 
-Noah Turner  notu5412
+Noah Turner  - notu5412
 
 Davis Olson  
 
