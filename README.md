@@ -1,15 +1,15 @@
 # SoftDev-Rec013-Team07
 Software Development 3308 Recitation 013 Team 07
 
-Jongwon Lee  
+Jongwon Lee  - jole2550
 
-Noah Turner  
+Noah Turner  - notu5412
 
-Davis Olson  
+Davis Olson  - daol3974
 
-Elizabeth Coleman  
+Elizabeth Coleman  - elco5414
 
-Robert LaChausse
+Robert LaChausse - rola9958
 
-Jose Garcia
+Jose Garcia -joga2910
 
