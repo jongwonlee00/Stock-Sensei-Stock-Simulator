@@ -15,7 +15,12 @@ Robert LaChausse - rola9958
 
 Jose Garcia -joga2910
 
-Application Name: 
+Application Name: Learn2Trade
+
 Application Description:
-User is able to create an account where they are able to simulate stock trading in order to learn more about it in a risk free envirenment. There is also oppurtunity for learning, which has financial incentive, as well as community interaction, personal tracking of favorited stocks, and a live news feed of real stock market related news. 
+
+Learn2Trade is a comprehensive stock trading simulator designed for individuals eager to delve into the world of finance without the fear of financial loss. Users can create accounts, engage in risk-free simulated stock trading, and gain valuable insights into the dynamics of the stock market. The platform goes beyond mere simulation, offering learning opportunities with "financial" incentives, fostering community interaction, providing personal tracking features for favorite stocks, and delivering a live news feed for real-time market updates.
+
 Vision Statement:
+
+For anyone with a curiosity about finance, Learn2Trade is the ideal stock trading simulator. By offering a risk-free environment for simulated real-time stock trading, we empower users to learn and enhance their financial education. Unlike other stock simulation applications, Learn2Trade not only simulates trading but also cultivates a community of learners, incentivizes financial education, keeps users informed with a live news feed of real stock market events, and allows users to track their own personal favorite trades/stocks.
