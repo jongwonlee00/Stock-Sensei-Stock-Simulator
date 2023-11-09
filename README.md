@@ -5,7 +5,11 @@
 
 - Jongwon Lee  - jole2550
 
+<<<<<<< HEAD
+Davis Olson  - daol3974
+=======
 - Noah Turner  - notu5412
+>>>>>>> be6093d9e813330c90acf0bc7c7d6903160a4237
 
 - Davis Olson  - daol3974
 
