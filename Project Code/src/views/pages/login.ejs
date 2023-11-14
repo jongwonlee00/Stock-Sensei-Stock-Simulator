@@ -1,0 +1,86 @@
+<%- include ('../partials/head') %> 
+<%- include ('../partials/menu') %>
+<%- include ('../partials/message') %>
+
+<main>
+
+  <style>
+    body{
+      background-color: #d8d6d6; /* Light grey background color */
+    }
+  
+    main{
+      font-family: helvetica; 
+      font-weight: bold; 
+      text-align: center; 
+    }
+  
+    .container {
+      background-color: #ffffff; /* Set a white background for the container */
+      padding: 20px; /* Add some padding to the container */
+      border-radius: 8px; /* Add border-radius for a rounded appearance */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+    }
+  
+    .form-group {
+      margin-bottom: 20px; /* Add margin between form groups */
+    }
+  
+    input[type="username"],
+    input[type="password"],
+    input[type="submit"] {
+      border: 1px solid #ccc; /* Add a border to input elements */
+      border-radius: 4px; /* Add border-radius for a rounded appearance */
+    }
+  
+    input[type="username"],
+    input[type="password"] {
+      width: calc(100% - 16px);
+      padding: 8px;
+      box-sizing: border-box;
+    }
+  
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50; /* Green background color for submit button */
+      color: #fff; /* White text color for submit button */
+      cursor: pointer;
+    }
+  
+    a{
+      color: #4CAF50; /* Green color for links */
+    }
+
+  </style>
+    
+  <div class="container">
+    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+
+    <form action="/login" method="POST">
+
+      <div class="form-group">
+        <div style="font-size:150px; text-align:center; margin-bottom:150px; color: #888; text-transform: uppercase; letter-spacing: 2px;"></div>STOCK SENSEI</label>
+    </div>
+      
+      <div class="form-group">
+          <label for="username">Username</label>
+          <input type="username" id="username" name="username" style="width: calc(100% - 16px); padding: 8px; box-sizing: border-box;" />
+      <div style="font-size: 12px; color: #888; margin-bottom: 25px;"></div>
+      </div>
+  
+      <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" style="width: calc(100% - 16px); padding: 8px; box-sizing: border-box; margin-bottom: 25px;" />
+      </div>
+        
+          <input type="submit" value="Login" />
+
+        <p>If you don't have an account with us, <a href="/register">Register here</a></p>
+  
+
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>
+
