@@ -2,7 +2,7 @@
 CREATE TABLE User (
     user_id INT PRIMARY KEY,
     username VARCHAR(20) UNIQUE NOT NULL,
-    password_hash VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
     full_name VARCHAR(50)
 );

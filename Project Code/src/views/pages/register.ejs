@@ -1,1 +1,84 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+<%- include ('../partials/message') %>
 
+<main>
+  <div class="container">
+    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+
+  <style>
+    body {
+      background-color: #f2f2f2; /* Light grey background color */
+    }
+  
+    main {
+      font-family: "Stock Sensei", helvetica; /* Set font-family to "Stock Sensei" */
+      font-weight: bold; /* Make the text bold */
+      text-align: center; /* Center-align the text */
+    }
+  
+    .container {
+      background-color: #ffffff; /* Set a white background for the container */
+      padding: 20px; /* Add some padding to the container */
+      border-radius: 8px; /* Add border-radius for a rounded appearance */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+    }
+  
+    .form-group {
+      margin-bottom: 20px; /* Add margin between form groups */
+    }
+  
+    input[type="username"],
+    input[type="password"],
+    input[type="submit"] {
+      border: 1px solid #ccc; /* Add a border to input elements */
+      border-radius: 4px; /* Add border-radius for a rounded appearance */
+    }
+  
+    input[type="username"],
+    input[type="password"] {
+      width: calc(100% - 16px);
+      padding: 8px;
+      box-sizing: border-box;
+    }
+  
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50; /* Green background color for submit button */
+      color: #fff; /* White text color for submit button */
+      cursor: pointer;
+    }
+  
+    a{
+      color: #4CAF50; /* Green color for links */
+    }
+
+    #stock-sensei{
+      font-size: 45px; /* Adjust the font size as needed */
+      font-family: "sans-serif"; /* Set a different font for "STOCK SENSEI" */
+      color: #333; /* Set the text color for "STOCK SENSEI" */
+    }
+
+  </style>
+    
+
+    <form action="/register" method="POST">
+
+        <div class="form-group">
+            <label for="username">User name</label>
+            <input type="username" id="username" name="username" style="width: calc(100% - 16px); padding: 8px; box-sizing: border-box;" />
+        </div>
+      
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" style="width: calc(100% - 16px); padding: 8px; box-sizing: border-box;" />
+        </div>
+          
+            <input type="submit" value="Register" />
+          
+        </form>
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>
