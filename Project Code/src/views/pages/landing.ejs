@@ -1,0 +1,107 @@
+<header>
+    <nav class="navbar navbar-expand-sm border-bottom">
+      <div class="container">
+        <button
+          class="navbar-toggler ms-auto"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbar-collapse"
+          aria-controls="navbar"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/home">Home</a>
+            </li>
+          </ul>
+          <div class="nav-item me-1">
+                <a class="nav-link" href="/invest">Invest</a>
+          </div>
+          <div class="nav-item me-1">
+                <a class="nav-link" href="/learn">Learn</a>
+          </div>
+          <div class="nav-item me-1">
+                <a class="nav-link" href="/account">Profile</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+   </header>
+ <%- include ('../partials/head') %>
+ <style>
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: black; /* Add your preferred background color */
+    }
+     .button-container {
+      display: flex;
+    }
+     .button {
+      margin-left: 10px;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #ffffff;
+      background-color: green; /* You can choose your desired color */
+      border-radius: 5px;
+      cursor: pointer;
+    }
+     /* Additional styling for hover effects if you want */
+    .button:hover {
+      background-color: greenyellow; /* Adjust the hover color as needed */
+    }
+    main {
+    text-align: center;
+    padding: 20px;
+    background-color: black;
+  }
+ 
+ 
+  .sliding-graphic-container {
+    position: relative;
+    width: 100%;
+    height: 100%; /* Adjust the height as needed */
+    overflow: hidden;
+  }
+ 
+ 
+  .sliding-graphic {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+  }
+  </style>
+ <header>
+    <img src="">
+    <h1> Stock Sensei </h1>
+    <div class="button-container">
+      <a href="/login" class="button">Login</a>
+      <a href="/register" class="button">Register</a>
+    </div>
+  </header>
+   <main>
+    <div class="sliding-graphic-container">
+      <img src="https://n4gm.com/wp-content/uploads/2020/11/Backtesting-Trading-Strategy.jpg" alt="Sliding Graphic" class="sliding-graphic">
+    </div>
+    <!-- Your other main content goes here -->
+  </main>
+   <%- include ('../partials/footer') %>
+   <script>
+    // JavaScript for sliding effect
+    const slidingGraphic = document.querySelector('.sliding-graphic');
+    let translateValue = 0;
+     function slideGraphic() {
+      translateValue -= 100; // Adjust as needed
+      slidingGraphic.style.transform = `translateX(${translateValue}%)`;
+    }
+     // You can call slideGraphic() at intervals using setInterval or trigger it on some user action
+    setInterval(slideGraphic, 2000); // Slides every 2 seconds, adjust as needed
+  </script>
