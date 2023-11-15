@@ -72,11 +72,11 @@ app.use(
 // *****************************************************
 
 app.get('/', (req, res) => {
-  res.render('pages/login')
+  res.render('pages/landing')
 });
 
 app.get('/home', (req, res) => {
-  res.redirect('/login'); //this will call the /anotherRoute route in the API
+  res.render('pages/home'); //this will call the /anotherRoute route in the API
 });
 
 app.get('/register', (req,res) => {
@@ -84,25 +84,28 @@ app.get('/register', (req,res) => {
   res.render('pages/register')
 });
 
-// Register
+//register
 app.post('/register', async (req, res) => {
-  const hash = await bcrypt.hash(req.body.password, 10);
-  const username = req.body.username;
+  try {
+    const hash = await bcrypt.hash(req.body.password, 10);
+    console.log('Password Hash Length:', hash.length);
+    const username = req.body.username;
 
-  var query = 'INSERT into users (username, password) values ($1, $2) returning *;';
-  db.any(query, [username, hash])
-  .then((data) =>{
+    var query = 'INSERT into users (username, password) values ($1, $2) returning *;';
+    console.log('Generated Query:', query);
+    console.log('Username:', username);
+    console.log('Password:', hash);
+    console.log('Generated Query:', query);
+    const data = await db.one(query, [username, hash]);
+   
+
     console.log(data);
-    console.log("test");
+    console.log("User registered successfully");
     res.redirect("/login");
-  })
-  .catch((err) => {
+  } catch (err) {
     console.error("Error occurred during database operation:", err);
-    res.status(500).send("Internal Server Error");
-    console.log(err);
-    res.redirect("/register");
-  });
-
+    res.status(500).redirect("/register");
+  }
 });
 
 app.get('/login', (req, res) => {
@@ -125,7 +128,7 @@ app.post('/login', (req, res) => {
     if(match){
       req.session.user = data;
       req.session.save();
-      res.redirect("/discover");
+      res.redirect("/home");
     }
 
     else{
@@ -140,11 +143,6 @@ app.post('/login', (req, res) => {
     res.render("pages/login", {message: "Incorrect username or password"});
   });
 });
-
-// app.get('/discover', (req, res) => {
-//   //discover
-//   res.render('pages/discover')
-// });
 
 
 // Authentication Middleware.
