@@ -61,9 +61,41 @@ app.use(
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 app.get('/', (req, res) => {
-    // Redirect to the /login endpoint
-    res.redirect('pages/login');
-  });
+  res.render('pages/landing')
+});
+
+app.get('/home', (req, res) => {
+  res.render('pages/home'); //this will call the /anotherRoute route in the API
+});
+
+app.get('/register', (req,res) => {
+  //register
+  res.render('pages/register')
+});
+
+//register
+app.post('/register', async (req, res) => {
+  try {
+    const hash = await bcrypt.hash(req.body.password, 10);
+    console.log('Password Hash Length:', hash.length);
+    const username = req.body.username;
+
+    var query = 'INSERT into users (username, password) values ($1, $2) returning *;';
+    console.log('Generated Query:', query);
+    console.log('Username:', username);
+    console.log('Password:', hash);
+    console.log('Generated Query:', query);
+    const data = await db.one(query, [username, hash]);
+   
+
+    console.log(data);
+    console.log("User registered successfully");
+    res.redirect("/login");
+  } catch (err) {
+    console.error("Error occurred during database operation:", err);
+    res.status(500).redirect("/register");
+  }
+});
 
 app.get('/login', (req, res) => {
     const username = req.body
@@ -71,9 +103,23 @@ app.get('/login', (req, res) => {
     res.render('pages/login');
 });
 
-app.get('/register', (req, res) => {
-    res.render('pages/register');
-  });
+app.post('/login', (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  const query = "select * from users where username = $1;";
+  const values = [username, password];
+
+  db.one(query,values)
+   .then(async(data) => {
+    console.log(data);
+
+    const match = await bcrypt.compare(req.body.password, data.password);
+
+    if(match){
+      req.session.user = data;
+      req.session.save();
+      res.redirect("/home");
+    }
 
 // Register
 app.post('/register', async (req, res) => {
@@ -120,7 +166,6 @@ app.post('/login', (req,res) => {
         
     })
 });
-
 
 
 // Authentication Middleware.
