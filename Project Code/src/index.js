@@ -1,3 +1,13 @@
+
+/*
+Section 1: Import the necessary dependencies. Remember to check what each dependency does.
+Section 2: Connect to DB: Initialize a dbConfig variable that specifies the connection information for the database. The variables in the .env file can be accessed by using process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD and process.env.API_KEY.
+Section 3: App Settings
+Section 4: This is where you will add the implementation for all your API routes
+Section 5: Starting the server and keeping it active.
+
+*/
+
 // *****************************************************
 // <!-- Section 1 : Import Dependencies -->
 // *****************************************************
@@ -60,12 +70,13 @@ app.use(
 // *****************************************************
 // <!-- Section 4 : API Routes -->
 // *****************************************************
+
 app.get('/', (req, res) => {
-  res.render('pages/landing')
+  res.render('pages/login')
 });
 
 app.get('/home', (req, res) => {
-  res.render('pages/home'); //this will call the /anotherRoute route in the API
+  res.redirect('/login'); //this will call the /anotherRoute route in the API
 });
 
 app.get('/register', (req,res) => {
@@ -73,34 +84,30 @@ app.get('/register', (req,res) => {
   res.render('pages/register')
 });
 
-//register
+// Register
 app.post('/register', async (req, res) => {
-  try {
-    const hash = await bcrypt.hash(req.body.password, 10);
-    console.log('Password Hash Length:', hash.length);
-    const username = req.body.username;
+  const hash = await bcrypt.hash(req.body.password, 10);
+  const username = req.body.username;
 
-    var query = 'INSERT into users (username, password) values ($1, $2) returning *;';
-    console.log('Generated Query:', query);
-    console.log('Username:', username);
-    console.log('Password:', hash);
-    console.log('Generated Query:', query);
-    const data = await db.one(query, [username, hash]);
-   
-
+  var query = 'INSERT into users (username, password) values ($1, $2) returning *;';
+  db.any(query, [username, hash])
+  .then((data) =>{
     console.log(data);
-    console.log("User registered successfully");
+    console.log("test");
     res.redirect("/login");
-  } catch (err) {
+  })
+  .catch((err) => {
     console.error("Error occurred during database operation:", err);
-    res.status(500).redirect("/register");
-  }
+    res.status(500).send("Internal Server Error");
+    console.log(err);
+    res.redirect("/register");
+  });
+
 });
 
 app.get('/login', (req, res) => {
-    const username = req.body
-    const password = req.body
-    res.render('pages/login');
+  //login
+  res.render('pages/login')
 });
 
 app.post('/login', (req, res) => {
@@ -118,114 +125,62 @@ app.post('/login', (req, res) => {
     if(match){
       req.session.user = data;
       req.session.save();
-      res.redirect("/home");
+      res.redirect("/discover");
     }
 
-// Register
-app.post('/register', async (req, res) => {
-        //hash the password using bcrypt library
-    const hash = await bcrypt.hash(req.body.password, 10);
-    //const username = req.body;
-    var query = `INSERT INTO users (username, password) VALUES ($1,$2)`;
-    db.any(query, [req.body.username, hash])
-        .then(data => {
-            res.redirect('/login')
-        })
-        .catch(error => {
-            console.log(error)
-            res.render('pages/register')
-        });
+    else{
+      res.render("pages/login", {message: "Incorrect username or password"});
+    }
+  })
+  .catch((err) => {
+    /*
+    console.log(err);
+    res.redirect("/login");
+    */
+    res.render("pages/login", {message: "Incorrect username or password"});
   });
-// TODO - Include your API routes here
-app.post('/login', (req,res) => {
-  
-    const query = `SELECT * FROM users WHERE username = '${req.body.username}'`;
-   
-        
-    db.any(query)
-    .then(async data => {
-        if(data.length > 0) { 
-            const match = await bcrypt.compare(req.body.password, data[0].password);
-            console.log(match)
-            if(!match){
-                res.redirect('/login')
-            } else {
-                req.session.user = data;
-                req.session.save();
-                //res.redirect('/discover')
-                res.render('pages/stock');
-            }
-        } else {
-            res.render('pages/register');
-        }
-    })
-    .catch(error => {
-        res.render('pages/register');
-        console.error(error); // Log the error to the console
-        res.status(500).send('Internal Server Error');
-        
-    })
 });
+
+// app.get('/discover', (req, res) => {
+//   //discover
+//   res.render('pages/discover')
+// });
 
 
 // Authentication Middleware.
 const auth = (req, res, next) => {
-    if (!req.session.user) {
-      // Default to login page.
-      return res.redirect('/login');
-    }
-    next();
-  };
-  
-  // Authentication Required
- // app.use(auth);
-
- app.get('/stock', async (req, res) => {
-  try {
-    const stockSymbol = 'TSLA'; // Replace with your desired stock symbol
-    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
-
-    const { data } = await axios.get(`https://finnhub.io/api/v1/quote`, {
-      params: {
-        symbol: stockSymbol,
-        token: apiKey,
-      },
-    });
-
-    const stockQuoteData = {
-      currentPrice: data.c,
-      highPrice: data.h,
-      lowPrice: data.l,
-      openPrice: data.o,
-      previousClose: data.pc,
-      
-    };
-
-    res.render('pages/stock', { stockQuoteData, stockSymbol });
-  } catch (error) {
-    console.error('Error fetching stock data:', error.message);
-    res.status(500).send('Internal Server Error');
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
   }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.render('pages/login', { message: "Logged out Successfully"});
 });
 
- 
-
-
-app.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-      if (err) {
-        console.error('Error destroying session:', err);
-        res.status(500).send('Internal Server Error');
-      } else {
-        res.send('Logout successful');
-        res.render('pages/login'); // Redirect to the home page or any desired page after logout
-      }
-    });
-  });
 // *****************************************************
 // <!-- Section 5 : Start Server-->
 // *****************************************************
 // starting the server and keeping the connection open to listen for more requests
 app.listen(3000);
 console.log('Server is listening on port 3000');
+
+
+
+
+
+
+
+
+
+
+
+
+
 
