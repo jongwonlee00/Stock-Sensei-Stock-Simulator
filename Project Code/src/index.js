@@ -154,7 +154,40 @@ const auth = (req, res, next) => {
 };
 
 // Authentication Required
-app.use(auth);
+//app.use(auth);
+app.get('/invest', async (req, res) => {
+  try {
+    const stockSymbol = 'PLTR'; // Replace with your desired stock symbol
+    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
+    const resolution = 'D'; // Replace with your desired resolution (e.g., 'D' for daily)
+
+    const { data } = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
+      params: {
+        symbol: stockSymbol,
+        token: apiKey,
+        resolution: resolution,
+        from: Math.floor(new Date('2023-01-01').getTime() / 1000),
+        to: Math.floor(new Date().getTime() / 1000),
+      },
+    });
+
+    const stockCandleData = {
+      openPrices: data.o,
+      closePrices: data.c,
+      highPrices: data.h,
+      lowPrices: data.l,
+      timestamps: data.t,
+      volumes: data.v,
+    };
+
+    res.render('pages/invest', { stockCandleData, stockSymbol });
+  } catch (error) {
+    console.error('Error fetching stock candle data:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
 
 app.get("/logout", (req, res) => {
  req.session.destroy();

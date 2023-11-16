@@ -1,0 +1,39 @@
+<!-- views/pages/stock-candles.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Candles - <%= stockSymbol %></title>
+</head>
+<body>
+    <h1>Stock Candle Data for <%= stockSymbol %></h1>
+
+    <% if (stockCandleData && stockCandleData.timestamps && stockCandleData.timestamps.length > 0) { %>
+        <table border="1">
+            <tr>
+                <th>Timestamp</th>
+                <th>Open Price</th>
+                <th>Close Price</th>
+                <th>High Price</th>
+                <th>Low Price</th>
+                <th>Volume</th>
+            </tr>
+
+            <% for (let i = 0; i < stockCandleData.timestamps.length; i++) { %>
+                <tr>
+                    <td><%= new Date(stockCandleData.timestamps[i] * 1000).toLocaleString() %></td>
+                    <td><%= stockCandleData.openPrices[i] %></td>
+                    <td><%= stockCandleData.closePrices[i] %></td>
+                    <td><%= stockCandleData.highPrices[i] %></td>
+                    <td><%= stockCandleData.lowPrices[i] %></td>
+                    <td><%= stockCandleData.volumes[i] %></td>
+                </tr>
+            <% } %>
+        </table>
+    <% } else { %>
+        <p>No stock candle data available.</p>
+    <% } %>
+</body>
+</html>
