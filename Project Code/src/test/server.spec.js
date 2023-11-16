@@ -64,6 +64,7 @@ describe('Server!', () => {
     expect(response).to.have.status(400);
     expect(response.body.status).to.equals('error');
     assert.strictEqual(response.body.error, 'Incorrect username or password. If you do not have an account, please register.');
+    done();
   });
   
   it('positive: /register - Successful registration', async () => {
