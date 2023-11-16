@@ -66,6 +66,8 @@ app.use(
  })
 );
 
+app.use( express.static( "public" ) );
+
 // *****************************************************
 // <!-- Section 4 : API Routes -->
 // *****************************************************
@@ -73,6 +75,10 @@ app.use(
 app.get('/', (req, res) => {
  res.render('pages/landing')
 });
+
+app.get('/intro', (req, res) => {
+  res.render('pages/intro')
+ });
 
 app.get('/home', (req, res) => {
  res.render('pages/home'); //this will call the /anotherRoute route in the API
