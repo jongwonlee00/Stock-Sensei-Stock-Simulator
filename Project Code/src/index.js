@@ -66,6 +66,8 @@ app.use(
  })
 );
 
+app.use( express.static( "public" ) );
+
 // *****************************************************
 // <!-- Section 4 : API Routes -->
 // *****************************************************
@@ -73,6 +75,10 @@ app.use(
 app.get('/', (req, res) => {
  res.render('pages/landing')
 });
+
+app.get('/intro', (req, res) => {
+  res.render('pages/intro')
+ });
 
 app.get('/home', (req, res) => {
  res.render('pages/home'); //this will call the /anotherRoute route in the API
@@ -83,7 +89,18 @@ app.get('/register', (req,res) => {
  res.render('pages/register')
 });
 
+app.get('/account', (req,res) => {
+  //register
+  res.render('pages/account')
+ });
+
+ app.get('/learn', (req,res) => {
+  //register
+  res.render('pages/learn')
+ });
+
 //register
+/*
 app.post('/register', async (req, res) => {
  try {
    const hash = await bcrypt.hash(req.body.password, 10);
@@ -99,13 +116,42 @@ app.post('/register', async (req, res) => {
  
 
    console.log(data);
-   console.log("User registered successfully");
-   res.redirect("/login");
+   res.status(200).json({ status: 'success', message: 'User registered successfully.' });
+   //res.redirect("/login");
  } catch (err) {
    console.error("Error occurred during database operation:", err);
-   res.status(500).redirect("/register");
+   res.status(400).json({ status: 'error', message: 'Registration failed.' });
+   //res.status(400).redirect("/register");
  }
 });
+  */
+
+app.post('/register', async (req, res) => {
+  try {
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const username = req.body.username;
+
+    // Check if the username already exists
+    const checkQuery = 'SELECT * FROM users WHERE username = $1;';
+    const checkResult = await db.oneOrNone(checkQuery, [username]);
+
+    if (checkResult) {
+      // Username already exists, return an error response
+      return res.status(400).json({ status: 'error', message: 'Registration failed. Username already exists.' });
+    }
+
+    // Username doesn't exist, proceed with registration
+    const insertQuery = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;';
+    const data = await db.one(insertQuery, [username, hash]);
+
+    console.log(data);
+    res.status(200).json({ status: 'success', message: 'User registered successfully.' });
+  } catch (err) {
+    console.error("Error occurred during database operation:", err);
+    res.status(400).json({ status: 'error', message: 'Registration failed. Please try again.' });
+  }
+});
+
 
 app.get('/login', (req, res) => {
  //login
@@ -127,11 +173,12 @@ app.post('/login', (req, res) => {
    if(match){
      req.session.user = data;
      req.session.save();
-     res.redirect("/home");
+     res.json({ status: 'success', message: 'Welcome!' }); 
+     return res.redirect("/home");
    }
 
    else{
-     res.render("pages/login", {message: "Incorrect username or password"});
+    //res.status(400).render("pages/login", { message: "Incorrect username or password" });
    }
  })
  .catch((err) => {
@@ -139,7 +186,8 @@ app.post('/login', (req, res) => {
    console.log(err);
    res.redirect("/login");
    */
-   res.render("pages/login", {message: "Incorrect username or password"});
+
+   //res.status(400).render("pages/login", { message: "Incorrect username or password" });
  });
 });
 
@@ -187,16 +235,20 @@ app.get('/invest', async (req, res) => {
   }
 });
 
-
-
 app.get("/logout", (req, res) => {
  req.session.destroy();
  res.render('pages/login', { message: "Logged out Successfully"});
+});
+
+//dummy API for test
+
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
 });
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
 // *****************************************************
 // starting the server and keeping the connection open to listen for more requests
-app.listen(3000);
+module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
