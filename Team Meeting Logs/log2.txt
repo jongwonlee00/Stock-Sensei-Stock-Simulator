@@ -1,0 +1,31 @@
+scribe - liz
+
+Weekly TA Meeting 11/14/23
+liz: 
+- create landing page with or without api soon
+- work on home page ^^ what i meant when i said landing page on there
+- need minimum of 5 commits a week (this applies to everyone just mentioned here)
+- work on home page functionality 
+noah:
+- finhub, building off of lab 9
+- working on axios call and the docker
+- reading documentation on that as well
+- needs to know what functionalities need to be done w/ api
+- she mentioned emailing her about other api info
+davis:
+- designing the database
+- refined that, pushed that, we are using that currently
+- will go through all code and make sure all variable names are updated
+- create "dummy" users/insert calls and will write queries for api calls being used
+- work on account page
+robert:
+- learning epic, doing research on that, trying to work on user account, will be doing html&css later on
+- come up with rough skeleton around this idea, have commits on there
+jose:
+- learning page
+- also researching the education part with an outline of what everything would look like
+- work on end goal and final result 
+jon:
+- login and register pages with correct authentification 
+- have page showing, its in testing right now, working on linking that to the database
+- follow up: will be working on searching page with the stocks and those prices, working on investment page 
