@@ -2,9 +2,7 @@
 CREATE TABLE users (
    user_id SERIAL PRIMARY KEY,
    username VARCHAR(500) UNIQUE NOT NULL,
-   password VARCHAR(500) NOT NULL,
-   email VARCHAR(500),
-   full_name VARCHAR(500)
+   password VARCHAR(500) NOT NULL
 );
 
 
