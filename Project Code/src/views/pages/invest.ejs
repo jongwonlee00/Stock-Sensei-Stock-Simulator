@@ -1,39 +1,67 @@
-<!-- views/pages/stock-candles.ejs -->
+<!-- stockChart.ejs -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Candles - <%= stockSymbol %></title>
+    <title>Stock Chart Example</title>
+    <!-- Include the Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Stock Candle Data for <%= stockSymbol %></h1>
+    <h1>Stock Chart - <%= stockSymbol %></h1>
+    <canvas id="stockChart" width="800" height="400"></canvas>
+    
+    <!-- Example stock data (replace with your actual data) -->
+    <script>
+        // The data fetched from the server
+        const stockCandleData = {
+            openPrices: <%= JSON.stringify(stockCandleData.openPrices) %>,
+            closePrices: <%= JSON.stringify(stockCandleData.closePrices) %>,
+            timestamps: <%= JSON.stringify(stockCandleData.timestamps) %>,
+        };
 
-    <% if (stockCandleData && stockCandleData.timestamps && stockCandleData.timestamps.length > 0) { %>
-        <table border="1">
-            <tr>
-                <th>Timestamp</th>
-                <th>Open Price</th>
-                <th>Close Price</th>
-                <th>High Price</th>
-                <th>Low Price</th>
-                <th>Volume</th>
-            </tr>
+        // Function to create the stock chart
+        function createStockChart() {
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            const stockChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: stockCandleData.timestamps.map(timestamp => new Date(timestamp * 1000).toLocaleDateString()),
+                    datasets: [{
+                        label: 'Open Prices',
+                        data: stockCandleData.openPrices,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        fill: false,
+                        pointRadius: 0, // Remove little circles
+                        pointHoverRadius: 0, // Remove little circles on hover
+                    }, {
+                        label: 'Close Prices',
+                        data: stockCandleData.closePrices,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false,
+                        pointRadius: 0, // Remove little circles
+                        pointHoverRadius: 0, // Remove little circles on hover
+                    }],
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            type: 'linear',
+                            position: 'bottom',
+                        }],
+                    },
+                },
+            });
+        }
 
-            <% for (let i = 0; i < stockCandleData.timestamps.length; i++) { %>
-                <tr>
-                    <td><%= new Date(stockCandleData.timestamps[i] * 1000).toLocaleString() %></td>
-                    <td><%= stockCandleData.openPrices[i] %></td>
-                    <td><%= stockCandleData.closePrices[i] %></td>
-                    <td><%= stockCandleData.highPrices[i] %></td>
-                    <td><%= stockCandleData.lowPrices[i] %></td>
-                    <td><%= stockCandleData.volumes[i] %></td>
-                </tr>
-            <% } %>
-        </table>
-    <% } else { %>
-        <p>No stock candle data available.</p>
-    <% } %>
+        // Call the function to create the chart
+        createStockChart();
+    </script>
 </body>
 </html>

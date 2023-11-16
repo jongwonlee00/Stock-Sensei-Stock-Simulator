@@ -157,7 +157,7 @@ const auth = (req, res, next) => {
 //app.use(auth);
 app.get('/invest', async (req, res) => {
   try {
-    const stockSymbol = 'PLTR'; // Replace with your desired stock symbol
+    const stockSymbol = 'AAPL'; // Replace with your desired stock symbol
     const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
     const resolution = 'D'; // Replace with your desired resolution (e.g., 'D' for daily)
 
@@ -166,7 +166,7 @@ app.get('/invest', async (req, res) => {
         symbol: stockSymbol,
         token: apiKey,
         resolution: resolution,
-        from: Math.floor(new Date('2023-01-01').getTime() / 1000),
+        from: Math.floor(new Date('2020-01-01').getTime() / 1000),
         to: Math.floor(new Date().getTime() / 1000),
       },
     });
