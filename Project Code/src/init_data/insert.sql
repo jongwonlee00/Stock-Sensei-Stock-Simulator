@@ -1,7 +1,7 @@
-INSERT INTO users VALUES (1, davis, 'aaa', daol3974@colorado.edu, 'Davis Olson');
-INSERT INTO users VALUES (2, noah, 'aaa', notu5412@colorado.edu, 'Noah Turner');
-INSERT INTO users VALUES (3, liz, 'aaa', elco5414@colorado.edu, 'Elizabeth Coleman');
-INSERT INTO users VALUES (4, jon, 'aaa', jole2550@colorado.edu, 'Jongwon Lee');
+INSERT INTO users VALUES (1, 'davis', 'aaa', 'daol3974@colorado.edu', 'Davis Olson');
+INSERT INTO users VALUES (2, 'noah', 'aaa', 'notu5412@colorado.edu', 'Noah Turner');
+INSERT INTO users VALUES (3, 'liz', 'aaa', 'elco5414@colorado.edu', 'Elizabeth Coleman');
+INSERT INTO users VALUES (4, 'jon', 'aaa', 'jole2550@colorado.edu', 'Jongwon Lee');
 
 INSERT INTO Portfolio VALUES (1, 1, 'DaBestStocks', 2023-10-14);
 INSERT INTO Portfolio VALUES (2, 2, 'NoahsNuclearStocks', 2023-10-13);
