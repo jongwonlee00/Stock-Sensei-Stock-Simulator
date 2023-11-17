@@ -76,6 +76,9 @@ app.get('/', (req, res) => {
  res.render('pages/landing')
 });
 
+app.get('/welcome', (req, res) => {
+  res.json({ status: 'success', message: 'Welcome!' });
+});
 app.get('/intro', (req, res) => {
   res.render('pages/intro')
  });
@@ -88,7 +91,11 @@ app.get('/register', (req,res) => {
  //register
  res.render('pages/register')
 });
-
+app.get('/login', (req, res) => {
+  const username = req.body
+  const password = req.body
+  res.render('pages/login');
+});
 app.get('/account', (req,res) => {
   //register
   res.render('pages/account')
@@ -99,33 +106,18 @@ app.get('/account', (req,res) => {
   res.render('pages/learn')
  });
 
-//register
-/*
-app.post('/register', async (req, res) => {
- try {
-   const hash = await bcrypt.hash(req.body.password, 10);
-   console.log('Password Hash Length:', hash.length);
-   const username = req.body.username;
 
-   var query = 'INSERT into users (username, password) values ($1, $2) returning *;';
-   console.log('Generated Query:', query);
-   console.log('Username:', username);
-   console.log('Password:', hash);
-   console.log('Generated Query:', query);
-   const data = await db.one(query, [username, hash]);
- 
 
-   console.log(data);
-   res.status(200).json({ status: 'success', message: 'User registered successfully.' });
-   //res.redirect("/login");
- } catch (err) {
-   console.error("Error occurred during database operation:", err);
-   res.status(400).json({ status: 'error', message: 'Registration failed.' });
-   //res.status(400).redirect("/register");
- }
-});
-  */
 
+
+
+
+
+
+
+
+
+//Register endpoint
 app.post('/register', async (req, res) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10);
@@ -136,7 +128,7 @@ app.post('/register', async (req, res) => {
     const checkResult = await db.oneOrNone(checkQuery, [username]);
 
     if (checkResult) {
-      // Username already exists, return an error response
+      // Username already exists, redirect to login with an error message
       return res.status(400).json({ status: 'error', message: 'Registration failed. Username already exists.' });
     }
 
@@ -144,52 +136,61 @@ app.post('/register', async (req, res) => {
     const insertQuery = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;';
     const data = await db.one(insertQuery, [username, hash]);
 
-    console.log(data);
+    // Registration successful, redirect to login with success message
     res.status(200).json({ status: 'success', message: 'User registered successfully.' });
   } catch (err) {
-    console.error("Error occurred during database operation:", err);
+    console.error('Error occurred during registration:', err);
+    // Redirect to login with error message in case of an error
     res.status(400).json({ status: 'error', message: 'Registration failed. Please try again.' });
   }
 });
 
+// Login endpoint
+app.post('/login', async (req, res) => {
+  try {
+    const query = 'SELECT * FROM users WHERE username = $1';
+    const userData = await db.oneOrNone(query, [req.body.username]);
 
-app.get('/login', (req, res) => {
- //login
- res.render('pages/login')
+    if (userData) {
+      const match = await bcrypt.compare(req.body.password, userData.password);
+
+      if (match) {
+        // Passwords match, set session and redirect to /invest
+        req.session.user = userData;
+        req.session.save();
+        return res.status(200).json({ status: 'success', message: 'Welcome!' });
+      } else {
+        // Incorrect password, redirect to register
+        return res.status(400).json({
+          status: 'error',
+          message: 'Incorrect username or password. If you do not have an account, please register.',
+          redirect: '/register', // Include relative redirect in the response
+        });
+      }
+    } else {
+      // User not found, redirect to register
+      return res.status(400).json({
+        status: 'error',
+        message: 'Incorrect username or password. If you do not have an account, please register.',
+        redirect: '/register', // Include relative redirect in the response
+      });
+    }
+  } catch (err) {
+    console.error('Error occurred during login:', err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal Server Error',
+    });
+  }
 });
 
-app.post('/login', (req, res) => {
- const username = req.body.username;
- const password = req.body.password;
- const query = "select * from users where username = $1;";
- const values = [username, password];
 
- db.one(query,values)
-  .then(async(data) => {
-   console.log(data);
 
-   const match = await bcrypt.compare(req.body.password, data.password);
 
-   if(match){
-     req.session.user = data;
-     req.session.save();
-     res.json({ status: 'success', message: 'Welcome!' }); 
-     return res.redirect("/home");
-   }
 
-   else{
-    //res.status(400).render("pages/login", { message: "Incorrect username or password" });
-   }
- })
- .catch((err) => {
-   /*
-   console.log(err);
-   res.redirect("/login");
-   */
 
-   //res.status(400).render("pages/login", { message: "Incorrect username or password" });
- });
-});
+
+// Login endpoint
 
 
 // Authentication Middleware.
@@ -202,7 +203,7 @@ const auth = (req, res, next) => {
 };
 
 // Authentication Required
-//app.use(auth);
+app.use(auth);
 app.get('/invest', async (req, res) => {
   try {
     const stockSymbol = 'AAPL'; // Replace with your desired stock symbol

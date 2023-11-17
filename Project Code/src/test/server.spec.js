@@ -54,6 +54,17 @@ describe('Server!', () => {
     await dbt.none('DELETE FROM users WHERE username = $1', [uniqueUser]);
   });
   
+  // it('negative: /login - User not found', async () => {
+  //   const nonExistentUser = `NonExistentUser_${Date.now()}`;
+  //   const response = await chai
+  //     .request(server)
+  //     .post('/login')
+  //     .send({ username: nonExistentUser, password: 'password' });
+  
+  //   expect(response).to.have.status(400);
+  //   expect(response.body.status).to.equals('error');
+  //   assert.strictEqual(response.body.error, 'Incorrect username or password. If you do not have an account, please register.');
+  // });
   it('negative: /login - User not found', async () => {
     const nonExistentUser = `NonExistentUser_${Date.now()}`;
     const response = await chai
@@ -63,7 +74,8 @@ describe('Server!', () => {
   
     expect(response).to.have.status(400);
     expect(response.body.status).to.equals('error');
-    assert.strictEqual(response.body.error, 'Incorrect username or password. If you do not have an account, please register.');
+    // expect(response.body.message).to.equals('Incorrect username or password. If you do not have an account, please register.');
+    expect(response.body.redirect).to.equals('/register'); // Check for relative redirect
   });
   
   it('positive: /register - Successful registration', async () => {

@@ -1,5 +1,3 @@
-<!-- stockChart.ejs -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +6,36 @@
     <title>Stock Chart Example</title>
     <!-- Include the Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #353535; /* Slightly lighter grey background */
+            color: #ffffff; /* White text color */
+            font-family: 'Arial', sans-serif;
+        }
+
+        h1 {
+            color: #00cc00; /* Adjusted green text color for the heading */
+        }
+
+        #buyButton {
+            background-color: #009900; /* Adjusted less bright green BUY button */
+            color: #ffffff; /* White text color */
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #sellButton {
+            background-color: #cc0000; /* Adjusted less bright red SELL button */
+            color: #ffffff; /* White text color */
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <h1>Stock Chart - <%= stockSymbol %></h1>
@@ -35,16 +63,16 @@
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 2,
                         fill: false,
-                        pointRadius: 0, // Remove little circles
-                        pointHoverRadius: 0, // Remove little circles on hover
+                        pointRadius: 0, // Larger point radius for emphasis
+                        pointHoverRadius: 0, // Larger point radius on hover
                     }, {
                         label: 'Close Prices',
                         data: stockCandleData.closePrices,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 2,
                         fill: false,
-                        pointRadius: 0, // Remove little circles
-                        pointHoverRadius: 0, // Remove little circles on hover
+                        pointRadius: 0, // Larger point radius for emphasis
+                        pointHoverRadius: 0, // Larger point radius on hover
                     }],
                 },
                 options: {
@@ -54,6 +82,10 @@
                         xAxes: [{
                             type: 'linear',
                             position: 'bottom',
+                            ticks: {
+                                autoSkip: true,
+                                maxTicksLimit: 10, // Display a maximum of 10 ticks on the x-axis
+                            },
                         }],
                     },
                 },
@@ -63,5 +95,9 @@
         // Call the function to create the chart
         createStockChart();
     </script>
+
+    <!-- Buy and Sell buttons -->
+    <button id="buyButton">BUY</button>
+    <button id="sellButton">SELL</button>
 </body>
 </html>
