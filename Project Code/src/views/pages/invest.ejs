@@ -8,49 +8,114 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            background-color: #353535; /* Slightly lighter grey background */
-            color: #ffffff; /* White text color */
+            background-color: #353535;
+            color: #ffffff;
             font-family: 'Arial', sans-serif;
         }
 
         h1 {
-            color: #00cc00; /* Adjusted green text color for the heading */
+            color: #00cc00;
         }
 
         #buyButton {
-            background-color: #009900; /* Adjusted less bright green BUY button */
-            color: #ffffff; /* White text color */
+            background-color: #009900;
+            color: #ffffff;
             padding: 10px 20px;
             margin-right: 10px;
             border: none;
-            cursor: pointer;
+            cursor: not-allowed;
             font-size: 16px;
         }
 
         #sellButton {
-            background-color: #cc0000; /* Adjusted less bright red SELL button */
-            color: #ffffff; /* White text color */
+            background-color: #cc0000;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            cursor: not-allowed;
+            font-size: 16px;
+        }
+
+        #iterateButton {
+            background-color: #0000cc;
+            color: #ffffff;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
             font-size: 16px;
+        }
+
+        #openPriceData {
+            margin-top: 10px;
+        }
+
+       
+        input[type="range"] {
+            width: 200px; /* Adjust the width as needed */
         }
     </style>
 </head>
 <body>
     <h1>Stock Chart - <%= stockSymbol %></h1>
+
     <canvas id="stockChart" width="800" height="400"></canvas>
+
+    <div id="openPriceData"></div>
     
+    <button id="buyButton">BUY</button>
+    <button id="sellButton">SELL</button>
+    <button id="iterateButton">ITERATE</button>
+    <div id="outputContainer">
+        <!-- Value will be displayed here -->
+    </div>
+
+    <div class="slider-container">
+        <input type="range" id="slider" min="0" max="60" value="0" step="5">
+        <p id="sliderValue">0</p>
+    </div>
+
     <!-- Example stock data (replace with your actual data) -->
     <script>
-        // The data fetched from the server
+        let currentIndex = 0;
+        let step = 1;
+
+        // Get the output element
+        const slider = document.getElementById("slider");
+        const sliderValue = document.getElementById("sliderValue");
+
+        // Display the default value on page load
+        sliderValue.innerHTML = slider.value;
+
+        // Update the displayed value as the slider is moved
+        slider.addEventListener("input", function() {
+            sliderValue.innerHTML = this.value;
+            step = parseInt(this.value);
+            updateChart();
+        });
+
+        function iterateAndDisplay() {
+            // Increment the index for the next click
+            currentIndex = (currentIndex + step) % stockCandleData.openPrices.length;
+
+            // Display the current value
+            document.getElementById('outputContainer').innerHTML = `
+                <p>Open Price: ${stockCandleData.openPrices[currentIndex]}</p>
+                <p>Time Stamp: ${new Date(stockCandleData.timestamps[currentIndex] * 1000).toLocaleString()}</p>
+                <p>Iterator Count: ${currentIndex}</p>
+            `;
+
+            updateChart();
+        }
+
+        // Add click event listener to the button
+        document.getElementById('iterateButton').addEventListener('click', iterateAndDisplay);
+
         const stockCandleData = {
             openPrices: <%= JSON.stringify(stockCandleData.openPrices) %>,
             closePrices: <%= JSON.stringify(stockCandleData.closePrices) %>,
             timestamps: <%= JSON.stringify(stockCandleData.timestamps) %>,
         };
 
-        // Function to create the stock chart
         function createStockChart() {
             const ctx = document.getElementById('stockChart').getContext('2d');
             const stockChart = new Chart(ctx, {
@@ -63,16 +128,8 @@
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 2,
                         fill: false,
-                        pointRadius: 0, // Larger point radius for emphasis
-                        pointHoverRadius: 0, // Larger point radius on hover
-                    }, {
-                        label: 'Close Prices',
-                        data: stockCandleData.closePrices,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        fill: false,
-                        pointRadius: 0, // Larger point radius for emphasis
-                        pointHoverRadius: 0, // Larger point radius on hover
+                        pointRadius: (context) => context.dataIndex === currentIndex ? 5 : 0,
+                        pointHoverRadius: (context) => context.dataIndex === currentIndex ? 8 : 0,
                     }],
                 },
                 options: {
@@ -84,20 +141,33 @@
                             position: 'bottom',
                             ticks: {
                                 autoSkip: true,
-                                maxTicksLimit: 10, // Display a maximum of 10 ticks on the x-axis
+                                maxTicksLimit: 10,
                             },
                         }],
                     },
+                    animation: false,
+                    elements: {
+                        line: {
+                            tension: 0
+                        }
+                    }
                 },
             });
+            return stockChart;
         }
 
-        // Call the function to create the chart
-        createStockChart();
-    </script>
+        function updateChart() {
+            // Destroy the existing chart before creating a new one
+            if (stockChart) {
+                stockChart.destroy();
+            }
+            
+            // Create the chart with updated point radius
+            stockChart = createStockChart();
+        }
 
-    <!-- Buy and Sell buttons -->
-    <button id="buyButton">BUY</button>
-    <button id="sellButton">SELL</button>
+        // Initial chart creation
+        let stockChart = createStockChart();
+    </script>
 </body>
 </html>
