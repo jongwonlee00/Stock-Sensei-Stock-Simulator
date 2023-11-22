@@ -41,3 +41,4 @@ StockSensei is a comprehensive stock trading simulator designed for individuals 
 ### Vision Statement:
 
 For anyone with a curiosity about finance, StockSensei is the ideal stock trading simulator. By offering a risk-free environment for simulated real-time stock trading, we empower users to learn and enhance their financial education. Unlike other stock simulation applications, StockSensei not only simulates trading but also cultivates a community of learners, incentivizes financial education, keeps users informed with a live news feed of real stock market events, and allows users to track their own personal favorite trades/stocks.
+>>>>>>> 259be8746d95457154155f38d92b50d72a1ccba6
