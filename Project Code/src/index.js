@@ -158,37 +158,38 @@ app.get('/login', (req, res) => {
  res.render('pages/login')
 });
 
-app.post('/login', (req, res) => {
- const username = req.body.username;
- const password = req.body.password;
- const query = "select * from users where username = $1;";
- const values = [username, password];
+app.post('/login', async (req, res) => {
+ const { username, password } = req.body;
+  
+ try {
+   // Find the user from the users table by username
+   const userQuery = 'SELECT * FROM users WHERE username = $1';
+   const userData = await db.oneOrNone(userQuery, [username]);
 
- db.one(query,values)
-  .then(async(data) => {
-   console.log(data);
+   if (userData) {
+     // Compare the entered password with the stored hashed password
+     const passwordMatch = await bcrypt.compare(password, userData.password);
 
-   const match = await bcrypt.compare(req.body.password, data.password);
-
-   if(match){
-     req.session.user = data;
-     req.session.save();
-     res.json({ status: 'success', message: 'Welcome!' }); 
-     return res.redirect("/home");
+     if (passwordMatch) {
+       // If the password is correct, save the user in the session
+       req.session.user = userData;
+       req.session.save();
+       res.redirect('/home');
+       res.status(200).json({ status: 'success', message: 'Welcome!' });
+     } else {
+       // Password is incorrect
+       throw new Error('Incorrect username or password.');
+     }
+   } else {
+     // User not found in the table
+     res.redirect('/register');
    }
-
-   else{
-    //res.status(400).render("pages/login", { message: "Incorrect username or password" });
-   }
- })
- .catch((err) => {
-   /*
-   console.log(err);
-   res.redirect("/login");
-   */
-
-   //res.status(400).render("pages/login", { message: "Incorrect username or password" });
- });
+ } catch (error) {
+   console.error(error);
+   // Render the login page with an appropriate message
+   res.status(400).json({ status: 'error', errorMessage: 'Incorrect username or password. If you do not have an account, please register.' });
+   res.render('pages/login');
+ }
 });
 
 
@@ -238,6 +239,10 @@ app.get('/invest', async (req, res) => {
 app.get("/logout", (req, res) => {
  req.session.destroy();
  res.render('pages/login', { message: "Logged out Successfully"});
+});
+
+app.get("/account", (req, res) => {
+  res.render('pages/account');
 });
 
 //dummy API for test
