@@ -83,6 +83,18 @@ app.get('/intro', (req, res) => {
   res.render('pages/intro')
  });
 
+ app.get('/fundamentals', (req, res) => {
+  res.render('pages/fundamentals')
+ });
+
+ app.get('/technical', (req, res) => {
+  res.render('pages/technical')
+ });
+
+ app.get('/portfolio', (req, res) => {
+  res.render('pages/portfolio')
+ });
+
 app.get('/home', (req, res) => {
  res.render('pages/home'); //this will call the /anotherRoute route in the API
 });
