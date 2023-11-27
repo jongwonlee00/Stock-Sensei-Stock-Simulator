@@ -163,7 +163,7 @@ app.post('/login', async (req, res) => {
         // Passwords match, set session and redirect to /invest
         req.session.user = userData;
         req.session.save();
-        res.redirect('/landing');
+        res.redirect('/home');
         //return res.status(200).json({ status: 'success', message: 'Welcome!' });
       } else {
         // Incorrect password, redirect to register
