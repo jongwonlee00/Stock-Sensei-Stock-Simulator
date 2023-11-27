@@ -76,8 +76,23 @@ app.get('/', (req, res) => {
  res.render('pages/landing')
 });
 
+app.get('/welcome', (req, res) => {
+  res.json({ status: 'success', message: 'Welcome!' });
+});
 app.get('/intro', (req, res) => {
   res.render('pages/intro')
+ });
+
+ app.get('/fundamentals', (req, res) => {
+  res.render('pages/fundamentals')
+ });
+
+ app.get('/technical', (req, res) => {
+  res.render('pages/technical')
+ });
+
+ app.get('/portfolio', (req, res) => {
+  res.render('pages/portfolio')
  });
 
 app.get('/home', (req, res) => {
@@ -88,7 +103,11 @@ app.get('/register', (req,res) => {
  //register
  res.render('pages/register')
 });
-
+app.get('/login', (req, res) => {
+  const username = req.body
+  const password = req.body
+  res.render('pages/login');
+});
 app.get('/account', (req,res) => {
   //register
   res.render('pages/account')
@@ -99,33 +118,18 @@ app.get('/account', (req,res) => {
   res.render('pages/learn')
  });
 
-//register
-/*
-app.post('/register', async (req, res) => {
- try {
-   const hash = await bcrypt.hash(req.body.password, 10);
-   console.log('Password Hash Length:', hash.length);
-   const username = req.body.username;
 
-   var query = 'INSERT into users (username, password) values ($1, $2) returning *;';
-   console.log('Generated Query:', query);
-   console.log('Username:', username);
-   console.log('Password:', hash);
-   console.log('Generated Query:', query);
-   const data = await db.one(query, [username, hash]);
- 
 
-   console.log(data);
-   res.status(200).json({ status: 'success', message: 'User registered successfully.' });
-   //res.redirect("/login");
- } catch (err) {
-   console.error("Error occurred during database operation:", err);
-   res.status(400).json({ status: 'error', message: 'Registration failed.' });
-   //res.status(400).redirect("/register");
- }
-});
-  */
 
+
+
+
+
+
+
+
+
+//Register endpoint
 app.post('/register', async (req, res) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10);
@@ -136,7 +140,7 @@ app.post('/register', async (req, res) => {
     const checkResult = await db.oneOrNone(checkQuery, [username]);
 
     if (checkResult) {
-      // Username already exists, return an error response
+      // Username already exists, redirect to login with an error message
       return res.status(400).json({ status: 'error', message: 'Registration failed. Username already exists.' });
     }
 
@@ -144,53 +148,54 @@ app.post('/register', async (req, res) => {
     const insertQuery = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;';
     const data = await db.one(insertQuery, [username, hash]);
 
-    console.log(data);
+    // Registration successful, redirect to login with success message
     res.status(200).json({ status: 'success', message: 'User registered successfully.' });
   } catch (err) {
-    console.error("Error occurred during database operation:", err);
+    console.error('Error occurred during registration:', err);
+    // Redirect to login with error message in case of an error
     res.status(400).json({ status: 'error', message: 'Registration failed. Please try again.' });
   }
 });
 
-
-app.get('/login', (req, res) => {
- //login
- res.render('pages/login')
-});
-
+// Login endpoint
 app.post('/login', async (req, res) => {
- const { username, password } = req.body;
-  
- try {
-   // Find the user from the users table by username
-   const userQuery = 'SELECT * FROM users WHERE username = $1';
-   const userData = await db.oneOrNone(userQuery, [username]);
+  try {
+    const query = 'SELECT * FROM users WHERE username = $1';
+    const userData = await db.oneOrNone(query, [req.body.username]);
 
-   if (userData) {
-     // Compare the entered password with the stored hashed password
-     const passwordMatch = await bcrypt.compare(password, userData.password);
+    if (userData) {
+      const match = await bcrypt.compare(req.body.password, userData.password);
 
-     if (passwordMatch) {
-       // If the password is correct, save the user in the session
-       req.session.user = userData;
-       req.session.save();
-       res.redirect('/home');
-       res.status(200).json({ status: 'success', message: 'Welcome!' });
-     } else {
-       // Password is incorrect
-       throw new Error('Incorrect username or password.');
-     }
-   } else {
-     // User not found in the table
-     res.redirect('/register');
-   }
- } catch (error) {
-   console.error(error);
-   // Render the login page with an appropriate message
-   res.status(400).json({ status: 'error', errorMessage: 'Incorrect username or password. If you do not have an account, please register.' });
-   res.render('pages/login');
- }
+      if (match) {
+        // Passwords match, set session and redirect to /invest
+        req.session.user = userData;
+        req.session.save();
+        return res.status(200).json({ status: 'success', message: 'Welcome!' });
+      } else {
+        // Incorrect password, redirect to register
+        return res.status(400).json({
+          status: 'error',
+          message: 'Incorrect username or password. If you do not have an account, please register.',
+          redirect: '/register', // Include relative redirect in the response
+        });
+      }
+    } else {
+      // User not found, redirect to register
+      return res.status(400).json({
+        status: 'error',
+        message: 'Incorrect username or password. If you do not have an account, please register.',
+        redirect: '/register', // Include relative redirect in the response
+      });
+    }
+  } catch (err) {
+    console.error('Error occurred during login:', err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal Server Error',
+    });
+  }
 });
+
 
 
 // Authentication Middleware.
@@ -204,18 +209,21 @@ const auth = (req, res, next) => {
 
 // Authentication Required
 //app.use(auth);
+
 app.get('/invest', async (req, res) => {
   try {
     const stockSymbol = 'PLTR'; // Replace with your desired stock symbol
     const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
-    const resolution = 'D'; // Replace with your desired resolution (e.g., 'D' for daily)
+    const resolution = '30'; // Use intraday resolution, e.g., '15' for 15-minute data
+    const fromDate = new Date();
+    fromDate.setDate(fromDate.getDate() - 600); // Set fromDate to one week ago
 
     const { data } = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
       params: {
         symbol: stockSymbol,
         token: apiKey,
         resolution: resolution,
-        from: Math.floor(new Date('2023-01-01').getTime() / 1000),
+        from: Math.floor(fromDate.getTime() / 1000),
         to: Math.floor(new Date().getTime() / 1000),
       },
     });
