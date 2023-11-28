@@ -246,7 +246,7 @@ app.get('/invest', async (req, res) => {
 
 app.get("/logout", (req, res) => {
  req.session.destroy();
- res.render('pages/login', { message: "Logged out Successfully"});
+ res.render('pages/landing', { message: "Logged out Successfully"});
 });
 
 //dummy API for test
