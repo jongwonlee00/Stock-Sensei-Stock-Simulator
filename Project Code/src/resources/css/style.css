@@ -1,0 +1,112 @@
+body {
+    background-color: #353535;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
+
+h1 {
+    color: #00cc00;
+}
+
+#buyButton {
+    background-color: #009900;
+    color: #ffffff;
+    padding: 10px 20px;
+    margin-right: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#sellButton {
+    background-color: #cc0000;
+    color: #ffffff;
+    padding: 10px 20px;
+    margin-right: 5px;
+    border: none;
+    cursor: not-allowed;
+    font-size: 16px;
+}
+
+#iterateButton {
+    background-color: #0000cc;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#simulateButton {
+    background-color: #ffd700;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333333;
+}
+
+#openPriceData {
+    margin-top: 10px;
+}
+
+input[type="range"] {
+    width: 200px; /* Adjust the width as needed */
+}
+
+#graph-caption {
+    position: absolute;
+    top: 100px; /* Adjust the top distance as needed */
+    left: 820px; /* Adjust the right distance as needed */
+    color: #00cc00;
+    font-size: 24px;
+}
+
+#buyPrice {
+    position: absolute;
+    top: 125px; /* Adjust the top distance as needed */
+    left: 820px; /* Adjust the right distance as needed */
+    color: #00cc00;
+    font-size: 24px;
+}
+
+#sellPrice {
+    position: absolute;
+    top: 150px; /* Adjust the top distance as needed */
+    left: 820px; /* Adjust the right distance as needed */
+    color: #cc0000;
+    font-size: 24px;
+}
+
+#shareAmount {
+    position: absolute;
+    top: 175px; /* Adjust the top distance as needed */
+    left: 820px; /* Adjust the right distance as needed */
+    color: #00cc00;
+    font-size: 20px;
+}
+
+.select-container {
+    position: absolute;
+    top: 200px; /* Adjust the top distance as needed */
+    left: 820px; /* Adjust the right distance as needed */
+    color: blue;
+    font-size: 20px;
+}
+
+#currentPrice {
+    position: absolute;
+    top: 225px; /* Adjust the top distance as needed */
+    left: 820px; /* Adjust the right distance as needed */
+    color: blanchedalmond;
+    font-size: 20px;
+}
+
+#gainLoss {
+    position: absolute;
+    top: 250px; /* Adjust the top distance as needed */
+    left: 820px; /* Adjust the right distance as needed */
+    color: blanchedalmond;
+    font-size: 20px;
+}
