@@ -214,7 +214,6 @@ app.post('/login', async (req, res) => {
 });
 
 
-
 const auth = (req, res, next) => {
   console.log('Session:', req.session); // Log the session information
   if (!req.session.user) {
@@ -288,7 +287,7 @@ app.get('/invest', async (req, res) => {
 });
 
 // API call for stock search
-app.get('/stockData', async (req, res) => {
+app.get('/stockData', async(req, res) => {
   try {
     const stockSymbol = req.query.stockSymbol || 'AAPL'; // Default to 'AAPL' if no symbol is provided
     const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
