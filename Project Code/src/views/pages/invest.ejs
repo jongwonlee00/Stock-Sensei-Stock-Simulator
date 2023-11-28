@@ -109,11 +109,11 @@
 
         // Add click event listener to the button
         document.getElementById('iterateButton').addEventListener('click', iterateAndDisplay);
-
+                
         const stockCandleData = {
-            openPrices: <%= JSON.stringify(stockCandleData.openPrices) %>,
-            closePrices: <%= JSON.stringify(stockCandleData.closePrices) %>,
-            timestamps: <%= JSON.stringify(stockCandleData.timestamps) %>,
+            openPrices: JSON.stringify(stockCandleData.openPrices),
+            closePrices: JSON.stringify(stockCandleData.closePrices),
+            timestamps: JSON.stringify(stockCandleData.timestamps),
         };
 
         function createStockChart() {

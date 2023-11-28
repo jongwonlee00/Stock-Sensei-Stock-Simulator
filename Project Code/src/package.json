@@ -20,7 +20,7 @@
     },
     "scripts": {
       "prestart": "npm install",
-      "start": "node index.js",
+      "start": "nodemon index.js",
       "dev": "nodemon server.js",
       "test": "mocha",
       "testandrun": "npm run prestart && npm run test && npm start"
