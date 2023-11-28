@@ -157,7 +157,7 @@
 
     <!-- Example stock data (replace with your actual data) -->
     <script>
-        let currentIndex = 0;
+         let currentIndex = 0;
         let currentAmount = 1000000;
         let shares = 0;
         let buyIndex;
@@ -335,11 +335,14 @@
 
         // Add click event listener to the button
         document.getElementById('iterateButton').addEventListener('click', iterateAndDisplay);
+        document.getElementById('buyButton').addEventListener('click', () => {buyShares();});
+        document.getElementById('sellButton').addEventListener('click', () => {sellShares();});
 
+        
         const stockCandleData = {
-            openPrices: JSON.stringify(stockCandleData.openPrices),
-            closePrices: JSON.stringify(stockCandleData.closePrices),
-            timestamps: JSON.stringify(stockCandleData.timestamps),
+            openPrices: <%= JSON.stringify(stockCandleData.openPrices) %>,
+            closePrices: <%= JSON.stringify(stockCandleData.closePrices) %>,
+            timestamps: <%= JSON.stringify(stockCandleData.timestamps) %>,
         };
 
         function createStockChart() {
