@@ -1,6 +1,3 @@
-<%- include ('../partials/head') %>
-<%- include ('../partials/menu') %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -347,7 +344,6 @@
             closePrices: <%= JSON.stringify(stockCandleData.closePrices) %>,
             timestamps: <%= JSON.stringify(stockCandleData.timestamps) %>,
         };
-        
 
         function createStockChart() {
             const ctx = document.getElementById('stockChart').getContext('2d');
@@ -411,5 +407,3 @@
     </script>
 </body>
 </html>
-
-<%- include ('../partials/footer') %>

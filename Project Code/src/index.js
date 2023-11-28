@@ -253,11 +253,11 @@ app.get('/transactions', auth, async (req, res) => {
 
 app.get('/invest', async (req, res) => {
   try {
-    const stockSymbol = 'AAPL'; // Replace with your desired stock symbol
+    const stockSymbol = 'PLTR'; // Replace with your desired stock symbol
     const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
-    const resolution = 'D'; // Use intraday resolution, e.g., '15' for 15-minute data
+    const resolution = '60'; // Use intraday resolution, e.g., '15' for 15-minute data
     const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 3650); // Set fromDate to one week ago
+    fromDate.setDate(fromDate.getDate() - 36); // Set fromDate to one week ago
 
     const { data } = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
       params: {
@@ -303,7 +303,6 @@ app.get('/stockData', async (req, res) => {
         to: Math.floor(new Date().getTime() / 1000),
       },
     });
-
     const stockCandleData = {
       openPrices: data.o,
       closePrices: data.c,
