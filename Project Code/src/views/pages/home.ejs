@@ -1,8 +1,55 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu') %>
 
+<header>
+    <style>
+        body {
+          background-color: black;
+          color: white;
+        }
+
+        header, main, footer {
+          padding: 20px;
+        }
+
+        #widgets-container {
+            display: flex;
+        }
+
+        .widget {
+            width: 20%; 
+            padding: 2px;
+            background-color: #37e184; 
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            margin-right: 5px; 
+        }
+    </style>
+
+    <nav>
+      <div>
+        <img src="">
+        <h1>Welcome back!</h1>
+      </div>
+    </nav>
+</header>
+
 <main>
-    <h1>home page</h1>
+    <div id="widgets-container">
+        <div id="newsFeed" class="widget">
+          <h2>Breaking News: Stock Market</h2>
+          <ul>
+            <!-- breaking news -->
+          </ul>
+        </div>
+        
+        <div id="topStocks" class="widget">
+          <h2>Top 5 Stocks with Highest Volume</h2>
+          <ul>
+            <!-- top 5 stocks by daily volume -->
+          </ul>
+        </div>
+      </div>
 </main>
 
 <%- include ('../partials/footer') %>
