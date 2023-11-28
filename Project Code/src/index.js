@@ -178,6 +178,8 @@ app.post('/login', async (req, res) => {
         // Passwords match, set session and redirect to /invest
         req.session.user = userData;
         req.session.save();
+        //log user data in session
+        console.log('User data stored in session:', userData);
         res.redirect('/home');
         //return res.status(200).json({ status: 'success', message: 'Welcome!' });
       } else {
@@ -210,8 +212,6 @@ app.post('/login', async (req, res) => {
     });
   }
 });
-
-
 
 const auth = (req, res, next) => {
   console.log('Session:', req.session); // Log the session information
@@ -284,6 +284,94 @@ app.get('/invest', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+// API call for stock search
+app.get('/stockData', async (req, res) => {
+  try {
+    const stockSymbol = req.query.stockSymbol || 'AAPL'; // Default to 'AAPL' if no symbol is provided
+    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
+    const resolution = 'D'; // Use daily resolution for simplicity
+    const fromDate = new Date();
+    fromDate.setDate(fromDate.getDate() - 3650); // Set fromDate to 10 years ago
+
+    const { data } = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
+      params: {
+        symbol: stockSymbol,
+        token: apiKey,
+        resolution: resolution,
+        from: Math.floor(fromDate.getTime() / 1000),
+        to: Math.floor(new Date().getTime() / 1000),
+      },
+    });
+
+    const stockCandleData = {
+      openPrices: data.o,
+      closePrices: data.c,
+      highPrices: data.h,
+      lowPrices: data.l,
+      timestamps: data.t,
+      volumes: data.v,
+    };
+
+    res.json({ stockCandleData, stockSymbol });
+  } catch (error) {
+    console.error('Error fetching stock candle data:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// API Call for top 5 stocks on volume of the day 
+/* WORKING ON IT RN - JON
+app.get('/topStocks', async (req, res) => {
+  try {
+    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your API key
+    const response = await axios.get('https://financial-data-api.com/api/v1/stock?limit=5&order=volume&apikey=' + apiKey);
+    const topStocks = response.data;
+
+    console.log('Top Stocks:', topStocks); // Log the topStocks data
+
+    res.render('pages/home', { topStocks });
+  } catch (error) {
+    console.error('Error fetching top stocks:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+// Invoke API route in home 
+app.get('/home', async (req, res) => {
+  try {
+    // Fetch top 5 stocks with highest volume
+    const response = await axios.get('/topStocks');
+    const topStocks = response.data;
+
+    // Render 'home.ejs' with top stocks data
+    res.render('pages/home', { topStocks });
+  } catch (error) {
+    console.error('Error fetching top stocks:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+*/
+
+
+
+/* MANUAL INPUT OF STOCK SYMBOL 
+app.get('/stockSymbol', (req, res) => {
+  const stockSymbol = 'AAPL';  
+  res.render('menu', { stockSymbol }); 
+});
+*/
+
+
+/* TRY TO RETRIEVE USERNAME FROM USER SESSION WHEN SUCCESSFULLY LOGGED IN
+app.get('/home', (req, res) => {
+  const username = req.session.user ? req.session.user.username : 'Guest';
+  const renderedHTML = res.render('pages/home', { username });
+  console.log('Rendered HTML:', renderedHTML);
+});
+*/
 
 app.get("/logout", (req, res) => {
  req.session.destroy();
