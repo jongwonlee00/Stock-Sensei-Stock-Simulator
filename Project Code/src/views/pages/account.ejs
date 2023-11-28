@@ -14,7 +14,18 @@
 
 
 <main>
-    <h1>account page</h1>
+    <h1>User Account</h1>
+        <section>
+            <div class="card">
+                <p>Welcome, <%= user.username %>!</p>
+            </div>
+        
+            <div class="card">
+                <h2>Portfolio</h2>
+                <p>Account Balance: $0 <%= accountBalance %></p>
+            </div>
+    
+        </section>
 </main>
 
 <%- include ('../partials/footer') %>

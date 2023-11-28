@@ -1,3 +1,4 @@
+
 -- User Table --
 CREATE TABLE users (
    user_id SERIAL PRIMARY KEY,
@@ -17,7 +18,7 @@ CREATE TABLE Portfolio (
 
 
 -- Stock Table --
-CREATE TABLE Stock (
+CREATE TABLE Stocks (
    stock_id INT PRIMARY KEY,
    name VARCHAR(10) UNIQUE NOT NULL,
    company_name VARCHAR(50) NOT NULL,
@@ -25,11 +26,8 @@ CREATE TABLE Stock (
    last_updated TIMESTAMP
 );
 
-
-
-
 -- Transaction Table --
-CREATE TABLE Transaction (
+CREATE TABLE Transactions (
    transaction_id INT PRIMARY KEY,
    user_id INT,
    portfolio_id INT,
@@ -39,5 +37,5 @@ CREATE TABLE Transaction (
    transaction_price DECIMAL(10, 2),
    FOREIGN KEY (user_id) REFERENCES users(user_id), 
    FOREIGN KEY (portfolio_id) REFERENCES Portfolio(portfolio_id),
-   FOREIGN KEY (stock_id) REFERENCES Stock(stock_id)
+   FOREIGN KEY (stock_id) REFERENCES Stocks(stock_id)
 );
