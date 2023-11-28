@@ -109,10 +109,25 @@ app.get('/login', (req, res) => {
   const password = req.body
   res.render('pages/login');
 });
-app.get('/account', (req,res) => {
-  //register
-  res.render('pages/account')
- });
+app.get('/account', async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT
+        COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) -
+        COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
+      FROM
+        Transactions t
+      WHERE
+        t.user_id = $1;
+    `, [req.session.user.user_id]);
+
+    const accountBalance = result.account_balance;
+    res.render('pages/account', {user: req.session.user, accountBalance });
+  } catch (err) {
+    console.error('Error executing query', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
  app.get('/learn', (req,res) => {
   //register
@@ -198,17 +213,43 @@ app.post('/login', async (req, res) => {
 
 
 
-// Authentication Middleware.
 const auth = (req, res, next) => {
- if (!req.session.user) {
-   // Default to login page.
-   return res.redirect('/login');
- }
- next();
+  console.log('Session:', req.session); // Log the session information
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
 };
 
+
 // Authentication Required
-//app.use(auth);
+app.use(auth);
+
+app.get('/user', auth, async (req, res) => {
+  try {
+    const userId = req.session.user.user_id;
+    const user = await db.query('SELECT * FROM users WHERE user_id = $1', [userId]);
+  
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user information:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//get transacton information from database
+app.get('/transactions', auth, async (req, res) => {
+  try {
+    const userId = req.session.user.user_id;
+    const result = await db.query('SELECT * FROM transaction WHERE user_id = $1', [userId]);
+    const transactions = result.rows;
+    res.json(transactions);
+  } catch (error) {
+    console.error('Error fetching transaction information:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.get('/invest', async (req, res) => {
   try {
@@ -247,10 +288,6 @@ app.get('/invest', async (req, res) => {
 app.get("/logout", (req, res) => {
  req.session.destroy();
  res.render('pages/login', { message: "Logged out Successfully"});
-});
-
-app.get("/account", (req, res) => {
-  res.render('pages/account');
 });
 
 //dummy API for test
