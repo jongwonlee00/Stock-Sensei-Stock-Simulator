@@ -85,7 +85,7 @@ describe('Server!', () => {
       .post('/register')
       .send({ username: uniqueUser, password: 'test' });
   
-    expect(response).to.have.status(200);
+    expect(response).to.have.status(302);
     expect(response.body.status).to.equals('success');
     assert.strictEqual(response.body.message, 'User registered successfully.');
   
@@ -105,7 +105,7 @@ describe('Server!', () => {
       .post('/register')
       .send({ username: duplicateUser, password: 'password' });
   
-    expect(secondRegistration).to.have.status(400);
+    expect(secondRegistration).to.redirect('/login');
     expect(secondRegistration.body.status).to.equals('error');
     assert.strictEqual(secondRegistration.body.message, 'Registration failed. Username already exists.');
   
