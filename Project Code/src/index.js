@@ -1,11 +1,5 @@
-/*
-Section 1: Import the necessary dependencies. Remember to check what each dependency does.
-Section 2: Connect to DB: Initialize a dbConfig variable that specifies the connection information for the database. The variables in the .env file can be accessed by using process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD and process.env.API_KEY.
-Section 3: App Settings
-Section 4: This is where you will add the implementation for all your API routes
-Section 5: Starting the server and keeping it active.
 
-*/
+
 
 // *****************************************************
 // <!-- Section 1 : Import Dependencies -->
