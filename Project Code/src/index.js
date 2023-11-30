@@ -283,7 +283,7 @@ const auth = (req, res, next) => {
 
 
 // Authentication Required
-app.use(auth);
+//app.use(auth);
 
 app.get('/user', auth, async (req, res) => {
   try {
@@ -312,13 +312,17 @@ app.get('/transactions', auth, async (req, res) => {
 
 app.get('/invest', async (req, res) => {
   try {
-    const stockSymbol = 'AAPL'; // Replace with your desired stock symbol
-    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
-    const resolution = 'D'; // Use intraday resolution, e.g., '15' for 15-minute data
-    const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 3650); // Set fromDate to one week ago
+    let stockSymbol = req.query.stockSymbol //'AAPL'; // Replace with your desired stock symbol
+    if (stockSymbol === undefined) {
+      stockSymbol = "AAPL";
+    }
 
-    const { data } = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
+    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
+    const resolution = '60'; // Use intraday resolution, e.g., '15' for 15-minute data
+    const fromDate = new Date();
+    fromDate.setDate(fromDate.getDate() - 36); // Set fromDate to one week ago
+
+    var { data }  = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
       params: {
         symbol: stockSymbol,
         token: apiKey,
@@ -327,6 +331,25 @@ app.get('/invest', async (req, res) => {
         to: Math.floor(new Date().getTime() / 1000),
       },
     });
+
+    console.log(data)
+
+    if (data.s == "no_data") {
+      console.log("No data, defaulting to TSLA")
+      stockSymbol = "TSLA"
+      data = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
+      params: {
+        symbol: stockSymbol,
+        token: apiKey,
+        resolution: resolution,
+        from: Math.floor(fromDate.getTime() / 1000),
+        to: Math.floor(new Date().getTime() / 1000),
+      },
+    });
+
+    data = data.data
+    console.log(data)
+    }
 
     const stockCandleData = {
       openPrices: data.o,
@@ -338,6 +361,7 @@ app.get('/invest', async (req, res) => {
     };
 
     res.render('pages/invest', { stockCandleData, stockSymbol });
+    //res.json({ stockCandleData, stockSymbol });
   } catch (error) {
     console.error('Error fetching stock candle data:', error.message);
     res.status(500).send('Internal Server Error');
@@ -362,7 +386,6 @@ app.get('/stockData', async (req, res) => {
         to: Math.floor(new Date().getTime() / 1000),
       },
     });
-
     const stockCandleData = {
       openPrices: data.o,
       closePrices: data.c,
