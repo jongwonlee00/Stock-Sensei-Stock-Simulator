@@ -1,11 +1,5 @@
-/*
-Section 1: Import the necessary dependencies. Remember to check what each dependency does.
-Section 2: Connect to DB: Initialize a dbConfig variable that specifies the connection information for the database. The variables in the .env file can be accessed by using process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD and process.env.API_KEY.
-Section 3: App Settings
-Section 4: This is where you will add the implementation for all your API routes
-Section 5: Starting the server and keeping it active.
 
-*/
+
 
 // *****************************************************
 // <!-- Section 1 : Import Dependencies -->
@@ -121,7 +115,9 @@ app.get('/account', async (req, res) => {
         t.user_id = $1;
     `, [req.session.user.user_id]);
 
-    const accountBalance = result.account_balance;
+    let accountBalance = result.account_balance;
+    if(accountBalance == null) accountBalance = 0;
+
     res.render('pages/account', {user: req.session.user, accountBalance });
   } catch (err) {
     console.error('Error executing query', err);
@@ -210,6 +206,44 @@ app.post('/login', async (req, res) => {
       status: 'error',
       message: 'Internal Server Error',
     });
+  }
+});
+
+app.post('/transactShares', async (res, req) => {
+  try{
+    const num_shares = req.body.shares;
+    const share_price = req.body.price;
+    let transact_date = req.body.date;
+    let type = req.body.type;
+    const stock_id = await db.query(`
+      SELECT stock_id
+      FROM Stocks
+      WHERE name = $1
+    `, [req.body.stock_name]);
+    const portfolio_id = await db.query(`
+      SELECT portfolio_id
+      FROM Portfolio
+      WHERE user_id = $1
+    `, [req.session.user.user_id]);
+
+    const user_id= await db.query(`
+      SELECT user_id
+      FROM users
+      WHERE user_id = $1
+      `, [req.session.user.user_id]);
+
+    const result = await db.query(`
+      INSERT INTO Transactions
+        (user_id,
+        portfolio_id,
+        stock_id,
+        transaction_type,
+        transaction_date,
+        transaction_price)
+      VALUES ($1, $2, $3, $4, $5, $6);
+    `, [user_id, portfolio_id, stock_id, type, transact_date, share_price]);
+  }catch (err) {
+    console.error('Unable to buy shares.', err);
   }
 });
 
