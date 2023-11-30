@@ -142,6 +142,7 @@ app.get('/account', async (req, res) => {
 
     let accountBalance = result.account_balance;
     if(accountBalance == null) accountBalance = 0;
+    accountBalance = accountBalance + 50000;
 
     res.render('pages/account', {user: req.session.user, accountBalance });
   } catch (err) {
@@ -155,7 +156,6 @@ app.get('/account', async (req, res) => {
   res.render('pages/learn')
  });
 
-
 //Register endpoint
 app.post('/register', async (req, res) => {
   try {
@@ -167,8 +167,6 @@ app.post('/register', async (req, res) => {
     const checkResult = await db.oneOrNone(checkQuery, [username]);
 
     if (checkResult) {
-      // Username already exists, redirect to login with an error status 'Username Exists'
-      // Need to implement error message displayed on UI
       return res.redirect('/login?error=' + encodeURIComponent('Username_Exists'));
     }
 
@@ -234,7 +232,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.post('/transactShares', async (res, req) => {
+app.post('/transactShares', async (req, res) => {
   try{
     const num_shares = req.body.shares;
     const share_price = req.body.price;
@@ -265,8 +263,9 @@ app.post('/transactShares', async (res, req) => {
         transaction_type,
         transaction_date,
         transaction_price)
-      VALUES ($1, $2, $3, $4, $5, $6);
+      VALUES ($1, $2, $3, $4, $5, $6)
     `, [user_id, portfolio_id, stock_id, type, transact_date, share_price]);
+    res.send('Transaction completed successfully');
   }catch (err) {
     console.error('Unable to buy shares.', err);
   }
@@ -306,6 +305,30 @@ app.get('/transactions', auth, async (req, res) => {
     res.json(transactions);
   } catch (error) {
     console.error('Error fetching transaction information:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/user_balance', async (req, res) => {
+  try{
+    const user_id = req.session.user.user_id;
+    const result = await db.query(`
+    SELECT
+      COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) -
+      COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
+    FROM
+      Transactions t
+    WHERE
+      t.user_id = $1;
+    `, [user_id]);
+
+    let balance = result.account_balance;
+    if(balance == null) balance = 0;
+    balance = balance + 50000;
+
+    res.json(balance);
+  } catch (err){
+    console.error('Error fetching balance:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
