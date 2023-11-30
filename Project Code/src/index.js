@@ -184,6 +184,23 @@ app.post('/register', async (req, res) => {
   }
 });
 
+app.post('/change_password', async (req, res) =>{
+  try{
+      const query = 'SELECT * FROM users WHERE user_id = $1';
+      const userData = await db.oneOrNone(query, [req.session.user.user_id]);
+      const hash = await bcrypt.hash(req.body.password, 10);
+      if (userData) {
+          const insertQuery = 'UPDATE users SET password = $1 WHERE user_id = $2';
+          const data = await db.none(insertQuery, [hash,req.session.user.user_id]);
+          console.log('changed password');
+          res.redirect('/account');
+      }
+    }catch(err){
+      console.error('Error occurred during password change', err);
+      res.redirect('/account');
+    }
+})
+
 // Login endpoint
 app.post('/login', async (req, res) => {
   try {
