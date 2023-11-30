@@ -1,57 +1,86 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu') %>
+<style>
+   body {
+       background-color: black;
+       margin: 0;
+       padding: 0;
+   }
 
-<header>
-    <style>
-        body {
-          background-color: black;
-          color: white;
-        }
+   main {
+       position: relative;
+   }
 
-        header, main, footer {
-          padding: 20px;
-        }
+   h1 {
+       position: absolute;
+       top: 0;
+       left: 0;
+       padding: 10px;
+   }
 
-        #widgets-container {
-            display: flex;
-        }
+   .newsBar {
+       background-color: white;
+       overflow: hidden; /* Hide overflowing content */
+       position: relative;
+   }
 
-        .widget {
-            width: 20%; 
-            padding: 2px;
-            background-color: #37e184; 
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            margin-right: 5px; 
-        }
-    </style>
+   .newsSlider {
+       height: 90px; /* Set the slider height to 90px */
+       display: flex;
+       width: 100%;
+       animation: slideAnimation 50s linear infinite; /* Adjust the duration as needed */
+   }
 
-    <nav>
-      <div>
-        <img src="">
-        <h1>Welcome back!</h1>
-      </div>
-    </nav>
-    
-</header>
+   .newsItem {
+       flex: 0 0 100%; /* Take up the full width of the screen */
+       background-color: white; /* Add background color for each news item */
+       padding: 5px;
+       box-sizing: border-box;
+       margin: 0;
+       display: flex;
+       align-items: center; /* Center content vertically */
+   }
 
+   .newsItem img {
+       max-height: 80px; /* Adjust the max height of the image */
+       margin-right: 10px; /* Add margin to the right of the image */
+   }
 
+   .newsHeadline,
+   .newsSummary {
+       padding: 2px;
+   }
+
+   @keyframes slideAnimation {
+       0% {
+           transform: translateX(0);
+       }
+       33.33% {
+           transform: translateX(-100%);
+       }
+       66.66% {
+           transform: translateX(-200%);
+       }
+       100% {
+           transform: translateX(0);
+       }
+   }
+</style>
 <main>
-    <div id="widgets-container">
-        <div id="newsFeed" class="widget">
-          <h2>Breaking News: Stock Market</h2>
-          <ul>
-            <!-- breaking news -->
-          </ul>
-        </div>
-        
-        <div id="topStocks" class="widget">
-          <h2>Top 5 Stocks with Highest Volume</h2>
-          <ul>
-            <!-- top 5 stocks by daily volume -->
-          </ul>
-        </div>
-      </div>
+   <h1>Home</h1>
+   <div class="newsBar">
+       <div class="newsSlider">
+           <% events.slice(0,15).forEach(article => { %>
+               <div class="newsItem">
+                   <img src="<%= article.image %>" alt="News Image" class="newsImage">
+                   <div>
+                       <h3 class="newsHeadline"><%= article.headline %></h3>
+                       <p class="newsSummary"><%= article.summary %></p>
+                   </div>
+               </div>
+           <% }); %>
+       </div>
+   </div>
 </main>
 
 <%- include ('../partials/footer') %>
