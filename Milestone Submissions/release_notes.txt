@@ -1,0 +1,29 @@
+11/28/23 Release Notes
+
+New Features:
+ - New landing page
+ - New home page
+ - redirection bug fixes
+ - authentication bug fixes
+ - search bar
+ - invest page (buy/sell/iterate/simulate)
+
+Progress:
+ - account page
+ - home page
+ - learn page
+ - general styling cohesiveness
+
+11/14/23 Release Notes
+
+New Features:
+authentication is finished, and we are in the testing phase on that
+database created
+login/register pages
+directory structure outlined
+
+Progress:
+testing docker
+completing external API use and testing
+learning page research
+
