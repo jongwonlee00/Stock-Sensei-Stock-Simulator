@@ -152,7 +152,7 @@ app.post('/register', async (req, res) => {
     }
 
     // Username doesn't exist, proceed with registration
-    const insertQuery = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;';
+    const insertQuery = 'INSERT INTO users (username, password) VALUES ($1, $2);';
     const data = await db.one(insertQuery, [username, hash]);
 
     // Registration successful, redirect to login with success message
@@ -317,6 +317,41 @@ app.get('/stockData', async (req, res) => {
   } catch (error) {
     console.error('Error fetching stock candle data:', error.message);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// API Call for pie chart in Portfolio
+
+// API Call for pie chart in Portfolio
+app.get('/portfolio', async (req, res) => {
+  try {
+    // Define the data object
+    const data = {
+      labels: ['Red', 'Blue', 'Yellow'],
+      datasets: [{
+        label: 'My First Dataset',
+        data: [300, 50, 100],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4
+      }]
+    };
+
+    // Configure the chart
+    const config = {
+      type: 'doughnut',
+      data: data,
+    };
+
+    // Send the response
+    res.json(config);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
