@@ -68,9 +68,9 @@
             </div>
         </nav>
     </header>
-    <div class="container mt-4">
+    <!-- <div class="container mt-4">
         <canvas id="stockChart" width="800" height="400"></canvas>
-    </div>
+    </div> -->
 
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -92,7 +92,7 @@
 
             try {
                 // Fetch stock prices
-                const response = await fetch(`/stockData?stockSymbol=${stockSymbol}`);
+                const response = await fetch(`/invest?stockSymbol=${stockSymbol}`);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch stock data.');
@@ -115,9 +115,11 @@
                 createAndDisplayStockChart(data.stockCandleData);
 
             } catch (error) {
+
                 console.error('Error fetching stock data:', error);
                 alert('Failed to fetch stock data. Please try again later.');
                 
+
                 
             } finally {
                 // Remove the loading indicator
@@ -130,43 +132,43 @@
         // Add a click event listener to the search button
         document.getElementById('searchButton').addEventListener('click', handleStockSymbolSearch);
 
-        function createAndDisplayStockChart(stockCandleData) {
-            const ctx = document.getElementById('stockChart').getContext('2d');
-            const stockChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: stockCandleData.timestamps.map(timestamp => new Date(timestamp * 1000).toLocaleDateString()),
-                    datasets: [{
-                        label: 'Open Prices',
-                        data: stockCandleData.openPrices,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 2,
-                        fill: false,
-                        pointRadius: 0, // Set the point radius to 0
-                    }],
-                },
-                options: {
-                    responsive: false,
-                    maintainAspectRatio: false,
-                    scales: {
-                        xAxes: [{
-                            type: 'linear',
-                            position: 'bottom',
-                            ticks: {
-                                autoSkip: true,
-                                maxTicksLimit: 10,
-                            },
-                        }],
-                    },
-                    animation: false,
-                    elements: {
-                        line: {
-                            tension: 0,
-                        },
-                    },
-                },
-            });
-        }
+        // function createAndDisplayStockChart(stockCandleData) {
+        //     const ctx = document.getElementById('stockChart').getContext('2d');
+        //     const stockChart = new Chart(ctx, {
+        //         type: 'line',
+        //         data: {
+        //             labels: stockCandleData.timestamps.map(timestamp => new Date(timestamp * 1000).toLocaleDateString()),
+        //             datasets: [{
+        //                 label: 'Open Prices',
+        //                 data: stockCandleData.openPrices,
+        //                 borderColor: 'rgba(255, 99, 132, 1)',
+        //                 borderWidth: 2,
+        //                 fill: false,
+        //                 pointRadius: 0, // Set the point radius to 0
+        //             }],
+        //         },
+        //         options: {
+        //             responsive: false,
+        //             maintainAspectRatio: false,
+        //             scales: {
+        //                 xAxes: [{
+        //                     type: 'linear',
+        //                     position: 'bottom',
+        //                     ticks: {
+        //                         autoSkip: true,
+        //                         maxTicksLimit: 10,
+        //                     },
+        //                 }],
+        //             },
+        //             animation: false,
+        //             elements: {
+        //                 line: {
+        //                     tension: 0,
+        //                 },
+        //             },
+        //         },
+        //     });
+        // }
     </script>
 
 </body>
