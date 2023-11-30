@@ -90,8 +90,33 @@ app.get('/intro', (req, res) => {
   res.render('pages/portfolio')
  });
 
-app.get('/home', (req, res) => {
- res.render('pages/home'); //this will call the /anotherRoute route in the API
+ app.get('/home', async (req, res) => {
+  try {
+    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
+
+    const { data } = await axios.get('https://finnhub.io/api/v1/news', {
+      params: {
+        token: apiKey,
+        category: 'general',
+        minId: 0,
+        size: 3,
+      },
+    });
+
+    const marketNews = data; // Correct variable name
+    const formattedNews = marketNews.map(news => {
+      return {
+        headline: news.headline,
+        image: news.image,
+        summary: news.summary,
+      };
+    });
+
+    res.render('pages/home', { events: formattedNews });
+  } catch (error) {
+    console.error('Error fetching data:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 app.get('/register', (req,res) => {
