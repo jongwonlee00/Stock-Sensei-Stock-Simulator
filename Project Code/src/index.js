@@ -310,6 +310,29 @@ app.get('/transactions', auth, async (req, res) => {
   }
 });
 
+app.get('/user_balance', async (req, res) => {
+  try{
+    const user_id = req.session.user.user_id;
+    const result = await db.query(`
+    SELECT
+      COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) -
+      COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
+    FROM
+      Transactions t
+    WHERE
+      t.user_id = $1;
+    `, [user_id]);
+
+    let balance = result.account_balance;
+    if(balance == null) balance = 0;
+
+    res.json(balance);
+  } catch (err){
+    console.error('Error fetching balance:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.get('/invest', async (req, res) => {
   try {
     let stockSymbol = req.query.stockSymbol //'AAPL'; // Replace with your desired stock symbol
