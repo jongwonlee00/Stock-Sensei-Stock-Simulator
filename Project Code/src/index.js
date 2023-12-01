@@ -11,7 +11,7 @@ const pgp = require('pg-promise')(); // To connect to the Postgres DB from the n
 const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcrypt'); //  To hash passwords
-const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
+const axios = require('axios'); // To make HTTP requests from our server. We'll know more about it in Part B.
 const { request } = require('chai');
 
 // *****************************************************
@@ -151,9 +151,29 @@ app.get('/account', async (req, res) => {
   }
 });
 
- app.get('/learn', (req,res) => {
-  //register
-  res.render('pages/learn')
+ app.get('/learn', async (req,res) => {
+  try {
+    const apiKey = 'clkkmapr01qkcrcfurv0clkkmapr01qkcrcfurvg'; // Finnhub API key
+
+    var { data }  = await axios.get(`https://finnhub.io/api/v1/news`, { //call to finnhub api
+      params: {
+        token: apiKey,
+        category: 'general',
+        minId: 0,
+      },
+    });
+
+    const NavNews = data; //take data into something we can uss
+    
+    // console.log(NavNews[0].headline); --testing stuff
+
+    res.render('pages/learn', { NavNews })
+    //res.json({ stockCandleData, stockSymbol });
+  } catch (error) {
+    console.error('Error fetching stock news:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+  
  });
 
 //Register endpoint
