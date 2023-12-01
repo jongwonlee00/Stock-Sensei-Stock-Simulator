@@ -1,0 +1,24 @@
+scribe - elizabeth 
+
+jon 
+- working on home, working on investment page
+- did the search bar functionality 
+
+davis
+- account page, made queries to the database for everyone to use
+- working on account page still and adding to that
+
+elizabeth
+- working on news bar and home page
+- will continue on that, get outisde api for news
+
+noah
+- created stock simulation, working on that
+- make more user freindly and continue that 
+
+robert
+- made news for learning page
+- leadning page 
+
+jose
+- learning page continuance

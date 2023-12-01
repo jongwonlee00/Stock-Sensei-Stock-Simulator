@@ -7,35 +7,20 @@ CREATE TABLE users (
 );
 
 
--- Portfolio Table --
-CREATE TABLE Portfolio (
-   portfolio_id INT PRIMARY KEY,
-   user_id INT,
-   portfolio_name VARCHAR(20) NOT NULL,
-   creation_date DATE,
-   FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-
 -- Stock Table --
 CREATE TABLE Stocks (
    stock_id INT PRIMARY KEY,
-   name VARCHAR(10) UNIQUE NOT NULL,
-   company_name VARCHAR(50) NOT NULL,
-   current_price DECIMAL(10, 2),
-   last_updated TIMESTAMP
+   name VARCHAR(10) UNIQUE NOT NULL
 );
 
 -- Transaction Table --
 CREATE TABLE Transactions (
    transaction_id INT PRIMARY KEY,
    user_id INT,
-   portfolio_id INT,
    stock_id INT,
    transaction_type VARCHAR(10) NOT NULL,
    transaction_date DATE,
    transaction_price DECIMAL(10, 2),
    FOREIGN KEY (user_id) REFERENCES users(user_id), 
-   FOREIGN KEY (portfolio_id) REFERENCES Portfolio(portfolio_id),
    FOREIGN KEY (stock_id) REFERENCES Stocks(stock_id)
 );

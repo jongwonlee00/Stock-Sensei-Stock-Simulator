@@ -1,4 +1,4 @@
-<%- include ('../partials/head') %>
+
 <%- include ('../partials/menu') %>
 
 <!DOCTYPE html>
@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Chart Example</title>
     <!-- Include the Chart.js library -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -18,6 +19,9 @@
 
         h1 {
             color: #00cc00;
+            /* position: absolute;
+            bottom: 50px; Adjust the top distance as needed */
+            
         }
 
         #buyButton {
@@ -118,6 +122,7 @@
             font-size: 20px;
         }
     </style>
+     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 </head>
 <body>
     <h1>Stock Chart - <%= stockSymbol %></h1>
@@ -157,10 +162,38 @@
             <option value="max">MAX</option>
         </select>
     </div>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <!-- Navbar brand -->
+            <a class="navbar-brand" href="#">Stock App</a>
+
+            <!-- Navbar toggle button for smaller screens -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Search bar -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="d-flex ms-auto">
+                    <input class="form-control me-2" type="search" placeholder="Enter stock symbol" aria-label="Search" id="stockSymbol">
+                    <button class="btn btn-outline-success" type="submit" onclick="getNewStock()">Search</button>
+                </div>
+
+            <script>
+                function getNewStock() {
+                    let stockSymbolDiv = document.getElementById("stockSymbol")
+                    window.location = location.origin + window.location.pathname + `?stockSymbol=${stockSymbolDiv.value}`
+                }
+            </script>
+            </div>
+        </div>
+    </nav>
+
 
     <!-- Example stock data (replace with your actual data) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-         let currentIndex = 0;
+        let currentIndex = 0;
         let currentAmount = 1000000;
         let shares = 0;
         let buyIndex;
@@ -181,6 +214,20 @@
             sliderValue.innerHTML = this.value;
             step = parseInt(this.value);
             updateChart();
+        });
+
+        
+
+        document.body.addEventListener('submit', function(event) {
+            if (event.target.id === 'stockForm') {
+                event.preventDefault(); // Prevent the form from submitting traditionally
+
+                // Get the entered stock symbol
+                stockSymbol = document.getElementById('stockInput').value;
+
+                // Use the stockSymbol as needed (e.g., update the chart title)
+                document.getElementById('stockChartTitle').innerText = `Stock Chart - ${stockSymbol}`;
+            }
         });
 
         function iterateAndDisplay() {
@@ -228,6 +275,10 @@
 
             // Ensure the value doesn't go negative
             currentAmount = Math.max(currentAmount, 0);
+
+            // Make POST request to DB
+            
+
 
             const formattedAmount = currentAmount.toLocaleString();
             document.getElementById('graph-caption').innerText = `$${formattedAmount}`;
@@ -347,7 +398,6 @@
             closePrices: <%= JSON.stringify(stockCandleData.closePrices) %>,
             timestamps: <%= JSON.stringify(stockCandleData.timestamps) %>,
         };
-        
 
         function createStockChart() {
             const ctx = document.getElementById('stockChart').getContext('2d');

@@ -1,11 +1,5 @@
-/*
-Section 1: Import the necessary dependencies. Remember to check what each dependency does.
-Section 2: Connect to DB: Initialize a dbConfig variable that specifies the connection information for the database. The variables in the .env file can be accessed by using process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD and process.env.API_KEY.
-Section 3: App Settings
-Section 4: This is where you will add the implementation for all your API routes
-Section 5: Starting the server and keeping it active.
 
-*/
+
 
 // *****************************************************
 // <!-- Section 1 : Import Dependencies -->
@@ -96,8 +90,33 @@ app.get('/intro', (req, res) => {
   res.render('pages/portfolio')
  });
 
-app.get('/home', (req, res) => {
- res.render('pages/home'); //this will call the /anotherRoute route in the API
+ app.get('/home', async (req, res) => {
+  try {
+    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
+
+    const { data } = await axios.get('https://finnhub.io/api/v1/news', {
+      params: {
+        token: apiKey,
+        category: 'general',
+        minId: 0,
+        size: 3,
+      },
+    });
+
+    const marketNews = data; // Correct variable name
+    const formattedNews = marketNews.map(news => {
+      return {
+        headline: news.headline,
+        image: news.image,
+        summary: news.summary,
+      };
+    });
+
+    res.render('pages/home', { events: formattedNews });
+  } catch (error) {
+    console.error('Error fetching data:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 app.get('/register', (req,res) => {
@@ -121,7 +140,10 @@ app.get('/account', async (req, res) => {
         t.user_id = $1;
     `, [req.session.user.user_id]);
 
-    const accountBalance = result.account_balance;
+    let accountBalance = result.account_balance;
+    if(accountBalance == null) accountBalance = 0;
+    accountBalance = accountBalance + 50000;
+
     res.render('pages/account', {user: req.session.user, accountBalance });
   } catch (err) {
     console.error('Error executing query', err);
@@ -134,7 +156,6 @@ app.get('/account', async (req, res) => {
   res.render('pages/learn')
  });
 
-
 //Register endpoint
 app.post('/register', async (req, res) => {
   try {
@@ -146,8 +167,6 @@ app.post('/register', async (req, res) => {
     const checkResult = await db.oneOrNone(checkQuery, [username]);
 
     if (checkResult) {
-      // Username already exists, redirect to login with an error status 'Username Exists'
-      // Need to implement error message displayed on UI
       return res.redirect('/login?error=' + encodeURIComponent('Username_Exists'));
     }
 
@@ -164,6 +183,23 @@ app.post('/register', async (req, res) => {
     res.redirect('/register');
   }
 });
+
+app.post('/change_password', async (req, res) =>{
+  try{
+      const query = 'SELECT * FROM users WHERE user_id = $1';
+      const userData = await db.oneOrNone(query, [req.session.user.user_id]);
+      const hash = await bcrypt.hash(req.body.password, 10);
+      if (userData) {
+          const insertQuery = 'UPDATE users SET password = $1 WHERE user_id = $2';
+          const data = await db.none(insertQuery, [hash,req.session.user.user_id]);
+          console.log('changed password');
+          res.redirect('/account');
+      }
+    }catch(err){
+      console.error('Error occurred during password change', err);
+      res.redirect('/account');
+    }
+})
 
 // Login endpoint
 app.post('/login', async (req, res) => {
@@ -213,6 +249,45 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.post('/transactShares', async (req, res) => {
+  try{
+    const num_shares = req.body.shares;
+    const share_price = req.body.price;
+    let transact_date = req.body.date;
+    let type = req.body.type;
+    const stock_id = await db.query(`
+      SELECT stock_id
+      FROM Stocks
+      WHERE name = $1
+    `, [req.body.stock_name]);
+    const portfolio_id = await db.query(`
+      SELECT portfolio_id
+      FROM Portfolio
+      WHERE user_id = $1
+    `, [req.session.user.user_id]);
+
+    const user_id= await db.query(`
+      SELECT user_id
+      FROM users
+      WHERE user_id = $1
+      `, [req.session.user.user_id]);
+
+    const result = await db.query(`
+      INSERT INTO Transactions
+        (user_id,
+        portfolio_id,
+        stock_id,
+        transaction_type,
+        transaction_date,
+        transaction_price)
+      VALUES ($1, $2, $3, $4, $5, $6)
+    `, [user_id, portfolio_id, stock_id, type, transact_date, share_price]);
+    res.send('Transaction completed successfully');
+  }catch (err) {
+    console.error('Unable to buy shares.', err);
+  }
+});
+
 const auth = (req, res, next) => {
   console.log('Session:', req.session); // Log the session information
   if (!req.session.user) {
@@ -224,7 +299,7 @@ const auth = (req, res, next) => {
 
 
 // Authentication Required
-app.use(auth);
+//app.use(auth);
 
 app.get('/user', auth, async (req, res) => {
   try {
@@ -251,15 +326,43 @@ app.get('/transactions', auth, async (req, res) => {
   }
 });
 
+app.get('/user_balance', async (req, res) => {
+  try{
+    const user_id = req.session.user.user_id;
+    const result = await db.query(`
+    SELECT
+      COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) -
+      COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
+    FROM
+      Transactions t
+    WHERE
+      t.user_id = $1;
+    `, [user_id]);
+
+    let balance = result.account_balance;
+    if(balance == null) balance = 0;
+    balance = balance + 50000;
+
+    res.json(balance);
+  } catch (err){
+    console.error('Error fetching balance:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.get('/invest', async (req, res) => {
   try {
-    const stockSymbol = 'AAPL'; // Replace with your desired stock symbol
-    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
-    const resolution = 'D'; // Use intraday resolution, e.g., '15' for 15-minute data
-    const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 3650); // Set fromDate to one week ago
+    let stockSymbol = req.query.stockSymbol //'AAPL'; // Replace with your desired stock symbol
+    if (stockSymbol === undefined) {
+      stockSymbol = "AAPL";
+    }
 
-    const { data } = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
+    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
+    const resolution = '60'; // Use intraday resolution, e.g., '15' for 15-minute data
+    const fromDate = new Date();
+    fromDate.setDate(fromDate.getDate() - 36); // Set fromDate to one week ago
+
+    var { data }  = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
       params: {
         symbol: stockSymbol,
         token: apiKey,
@@ -268,6 +371,25 @@ app.get('/invest', async (req, res) => {
         to: Math.floor(new Date().getTime() / 1000),
       },
     });
+
+    console.log(data)
+
+    if (data.s == "no_data") {
+      console.log("No data, defaulting to TSLA")
+      stockSymbol = "TSLA"
+      data = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
+      params: {
+        symbol: stockSymbol,
+        token: apiKey,
+        resolution: resolution,
+        from: Math.floor(fromDate.getTime() / 1000),
+        to: Math.floor(new Date().getTime() / 1000),
+      },
+    });
+
+    data = data.data
+    console.log(data)
+    }
 
     const stockCandleData = {
       openPrices: data.o,
@@ -279,6 +401,7 @@ app.get('/invest', async (req, res) => {
     };
 
     res.render('pages/invest', { stockCandleData, stockSymbol });
+    //res.json({ stockCandleData, stockSymbol });
   } catch (error) {
     console.error('Error fetching stock candle data:', error.message);
     res.status(500).send('Internal Server Error');
@@ -303,7 +426,6 @@ app.get('/stockData', async (req, res) => {
         to: Math.floor(new Date().getTime() / 1000),
       },
     });
-
     const stockCandleData = {
       openPrices: data.o,
       closePrices: data.c,
