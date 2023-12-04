@@ -350,63 +350,61 @@ app.get('/user_balance', async (req, res) => {
   }
 });
 
+
 app.get('/invest', async (req, res) => {
   try {
     let stockSymbol = req.query.stockSymbol //'AAPL'; // Replace with your desired stock symbol
     if (stockSymbol === undefined) {
       stockSymbol = "AAPL";
     }
+    const multiplier = '1';
+    const timespan = 'day';
+    const fromDate = '2022-01-09';
+    const toDate = '2023-01-09';
+    const adjusted = 'true';
+    const sort = 'asc';
+    const apiKey = '1aaoniwZvusnCcRBFvvsDxiO_doMNZ0u'; // Replace with your Polygon.io API key
 
-    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
-    const resolution = '60'; // Use intraday resolution, e.g., '15' for 15-minute data
-    const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 36); // Set fromDate to one week ago
 
-    var { data }  = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
+
+    //const { data } = await axios.get(`https://api.polygon.io/v2/aggs/ticker/${stockSymbol}/range/1/day/2022-01-09/2023-01-09?apiKey=${apiKey}`);
+    const { data } = await axios.get(`https://api.polygon.io/v2/aggs/ticker/${stockSymbol}/range/${multiplier}/${timespan}/${fromDate}/${toDate}?apikey=${apiKey}`, {
       params: {
-        symbol: stockSymbol,
-        token: apiKey,
-        resolution: resolution,
-        from: Math.floor(fromDate.getTime() / 1000),
-        to: Math.floor(new Date().getTime() / 1000),
+        apiKey: apiKey,
+        //from: fromDate,
+        //to: toDate,
+        adjusted: adjusted,
+        sortOrder: sort,
       },
     });
-
-    console.log(data)
-
-    if (data.s == "no_data") {
-      console.log("No data, defaulting to TSLA")
-      stockSymbol = "TSLA"
-      data = await axios.get(`https://finnhub.io/api/v1/stock/candle`, {
-      params: {
-        symbol: stockSymbol,
-        token: apiKey,
-        resolution: resolution,
-        from: Math.floor(fromDate.getTime() / 1000),
-        to: Math.floor(new Date().getTime() / 1000),
-      },
-    });
-
-    data = data.data
-    console.log(data)
+    // Check if data is available in the response
+    if (!data.results || data.results.length === 0) {
+      console.error('No results found in the API response.');
+      return res.status(500).send('Internal Server Error');
     }
 
+    // Extracted data object
     const stockCandleData = {
-      openPrices: data.o,
-      closePrices: data.c,
-      highPrices: data.h,
-      lowPrices: data.l,
-      timestamps: data.t,
-      volumes: data.v,
+      openPrices: data.results.map(result => result.o),
+      closePrices: data.results.map(result => result.c),
+      highPrices: data.results.map(result => result.h),
+      lowPrices: data.results.map(result => result.l),
+      timestamps: data.results.map(result => result.t),
+      volumes: data.results.map(result => result.v),
     };
 
+    // Render the 'pages/invest' view with the extracted data
     res.render('pages/invest', { stockCandleData, stockSymbol });
-    //res.json({ stockCandleData, stockSymbol });
+
+    // Optionally, you can store the extracted data in a database or file
+    // Example: storeStockDataInDatabase(stockCandleData);
+
   } catch (error) {
     console.error('Error fetching stock candle data:', error.message);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 // API call for stock search
 app.get('/stockData', async (req, res) => {
