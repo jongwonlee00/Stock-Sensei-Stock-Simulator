@@ -138,6 +138,21 @@
        padding: 2px;
    }
 
+   .marketStatus {
+       background-color: green; /* Set the background color to green */
+       color: white; /* Set text color to white */
+       padding: 10px;
+       margin-top: 20px; /* Add margin to separate market status from news */
+       margin-right: 1100px;
+   }
+
+   .marketStatus h2 {
+       color: white; /* Set header text color to white */
+   }
+
+   .marketStatus p {
+       margin: 0;
+   }
    @keyframes slideAnimation {
        0% {
            transform: translateX(0);
@@ -168,6 +183,15 @@
            <% }); %>
        </div>
    </div>
+
+   <div class="marketStatus">
+    <h2>Market Status</h2>
+    <p><strong>Exchange:</strong> <%= marketStatus.exchange %></p>
+    <p><strong>Session:</strong> <%= marketStatus.session %></p>
+    <p><strong>Is Open:</strong> <%= marketStatus.isOpen ? 'Yes' : 'No' %></p>
+    <!-- Add more information as needed -->
+</div>
+
 </main>
 
 >>>>>>> cb2cc35a94e8a64fdc173213b4cc5efd80d96da9

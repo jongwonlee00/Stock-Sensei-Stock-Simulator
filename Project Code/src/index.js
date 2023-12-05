@@ -99,8 +99,22 @@ app.get('/intro', (req, res) => {
  app.get('/home', async (req, res) => {
   try {
     const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
-
-    const { data } = await axios.get('https://finnhub.io/api/v1/news', {
+ 
+ 
+    // Fetch market status data
+    const marketStatusResponse = await axios.get('https://finnhub.io/api/v1/stock/market-status', {
+      params: {
+        exchange: 'US', // Replace with the desired exchange code
+        token: apiKey,
+      },
+    });
+ 
+ 
+    const marketStatus = marketStatusResponse.data;
+ 
+ 
+    // Fetch market news data
+    const newsResponse = await axios.get('https://finnhub.io/api/v1/news', {
       params: {
         token: apiKey,
         category: 'general',
@@ -108,8 +122,9 @@ app.get('/intro', (req, res) => {
         size: 3,
       },
     });
-
-    const marketNews = data; // Correct variable name
+ 
+ 
+    const marketNews = newsResponse.data;
     const formattedNews = marketNews.map(news => {
       return {
         headline: news.headline,
@@ -117,13 +132,15 @@ app.get('/intro', (req, res) => {
         summary: news.summary,
       };
     });
-
-    res.render('pages/home', { events: formattedNews });
+ 
+ 
+    res.render('pages/home', { events: formattedNews, marketStatus });
   } catch (error) {
     console.error('Error fetching data:', error.message);
     res.status(500).send('Internal Server Error');
   }
-});
+ });
+ 
 
 app.get('/register', (req,res) => {
  //register
