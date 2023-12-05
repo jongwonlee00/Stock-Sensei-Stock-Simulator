@@ -15,6 +15,96 @@
     }
 </style>
 
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Portfolio</title>
+
+  <!-- Include Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  
+  <h1>Jon's Portfolio</h1>
+
+  <!-- Canvas to render the chart -->
+  <canvas id="portfolioChart" width="400" height="400"></canvas>
+
+  <script>
+    // Fetch data from the server or use it directly
+    const data = {
+      labels: ['Cash', 'ETFS', 'Funds'],
+      datasets: [{
+        label: 'My First Dataset',
+        data: [300, 50, 100],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4,
+        labels: ['Cash', 'ETFS', 'Funds']
+      }]
+    };
+
+    // Get the canvas element
+    const ctx = document.getElementById('portfolioChart').getContext('2d');
+
+    // Create the doughnut chart
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: data,
+    });
+  </script>
+
+</body>
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Portfolio</title>
+
+  <!-- Include Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  
+  <h1>Jon's Portfolio</h1>
+
+  <!-- Canvas to render the chart -->
+  <canvas id="portfolioChart" width="400" height="400"></canvas>
+
+  <script>
+    // Fetch data from the server or use it directly
+    const data = {
+      labels: ['Cash', 'ETFS', 'Funds'],
+      datasets: [{
+        label: 'My First Dataset',
+        data: [300, 50, 100],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4,
+        labels: ['Cash', 'ETFS', 'Funds']
+      }]
+    };
+
+    // Get the canvas element
+    const ctx = document.getElementById('portfolioChart').getContext('2d');
+
+    // Create the doughnut chart
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: data,
+    });
+  </script>
+
+</body>
+
 <!-- portfolio.ejs -->
 
 <head>
