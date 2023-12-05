@@ -1,3 +1,13 @@
+12/5/23 Release Notes
+
+    - ReWorked API (noah killed this!!!!)
+    - portfolio page
+    - style changes
+    - working news bar
+    - learn page updates
+    - portfolio page
+    - account page new features
+
 11/28/23 Release Notes
 
 New Features:
