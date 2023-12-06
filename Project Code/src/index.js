@@ -314,7 +314,6 @@ app.post('/transactShares', async (req, res) => {
     const result = await db.query(`
       INSERT INTO Transactions
         (user_id,
-        portfolio_id,
         stock_id,
         transaction_type,
         transaction_date,
@@ -383,7 +382,7 @@ app.get('/user_balance', async (req, res) => {
     balance = balance + 50000;
 
     res.json(balance);
-  } catch (err){
+  } catch (error){
     console.error('Error fetching balance:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
