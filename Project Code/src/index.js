@@ -92,9 +92,16 @@ app.get('/intro', (req, res) => {
 
  app.get('/home', async (req, res) => {
   try {
-    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
+    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; 
+    const marketStatusResponse = await axios.get('https://finnhub.io/api/v1/stock/market-status', {
+      params: {
+        exchange: 'US',
+        token: apiKey,
+      },
+    });
 
-    const { data } = await axios.get('https://finnhub.io/api/v1/news', {
+    const marketStatus = marketStatusResponse.data;
+    const newsResponse = await axios.get('https://finnhub.io/api/v1/news', {
       params: {
         token: apiKey,
         category: 'general',
@@ -102,8 +109,9 @@ app.get('/intro', (req, res) => {
         size: 3,
       },
     });
-
-    const marketNews = data; // Correct variable name
+ 
+ 
+    const marketNews = newsResponse.data;
     const formattedNews = marketNews.map(news => {
       return {
         headline: news.headline,
@@ -112,12 +120,27 @@ app.get('/intro', (req, res) => {
       };
     });
 
-    res.render('pages/home', { events: formattedNews });
-  } catch (error) {
+    const result = await db.query(`
+        SELECT
+            COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) -
+            COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
+        FROM
+            Transactions t
+        WHERE
+            t.user_id = $1;
+    `, [req.session.user.user_id]);
+
+    let accountBalance = result.account_balance;
+    if (accountBalance == null) accountBalance = 0;
+    accountBalance = accountBalance + 50000;
+
+    res.render('pages/home', { user: req.session.user, accountBalance, events: formattedNews, marketStatus});
+} catch (error) {
     console.error('Error fetching data:', error.message);
     res.status(500).send('Internal Server Error');
-  }
-});
+}
+ });
+ 
 
 app.get('/register', (req,res) => {
  //register
@@ -128,6 +151,7 @@ app.get('/login', (req, res) => {
   const password = req.body
   res.render('pages/login');
 });
+
 app.get('/account', async (req, res) => {
   try {
     const result = await db.query(`
