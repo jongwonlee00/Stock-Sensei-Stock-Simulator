@@ -304,11 +304,6 @@ app.post('/transactShares', async (req, res) => {
       FROM Stocks
       WHERE name = $1
     `, [req.body.stock_name]);
-    const portfolio_id = await db.query(`
-      SELECT portfolio_id
-      FROM Portfolio
-      WHERE user_id = $1
-    `, [req.session.user.user_id]);
 
     const user_id= await db.query(`
       SELECT user_id
@@ -324,8 +319,8 @@ app.post('/transactShares', async (req, res) => {
         transaction_type,
         transaction_date,
         transaction_price)
-      VALUES ($1, $2, $3, $4, $5, $6)
-    `, [user_id, portfolio_id, stock_id, type, transact_date, share_price]);
+      VALUES ($1, $2, $3, $4, $5)
+    `, [user_id,  stock_id, type, transact_date, share_price]);
     res.send('Transaction completed successfully');
   }catch (err) {
     console.error('Unable to buy shares.', err);
