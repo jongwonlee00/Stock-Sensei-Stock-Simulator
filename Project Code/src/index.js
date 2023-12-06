@@ -109,8 +109,30 @@ app.get('/intro', (req, res) => {
         size: 3,
       },
     });
+
+    const stockResponseAAPL = await axios.get('https://finnhub.io/api/v1/quote?symbol=AAPL', {
+      params: {
+        token: apiKey,
+        symbol: 'AAPL',
+      },
+    });
+    const stockResponseTSLA = await axios.get('https://finnhub.io/api/v1/quote?symbol=TSLA', {
+      params: {
+        token: apiKey,
+        symbol: 'TSLA',
+      },
+    });
+    const stockResponseMSFT = await axios.get('https://finnhub.io/api/v1/quote?symbol=MSFT', {
+      params: {
+        token: apiKey,
+        symbol: 'MSFT',
+      },
+    });
  
- 
+    const tsla = stockResponseTSLA.data;
+    const aapl = stockResponseAAPL.data;
+    const msft = stockResponseMSFT.data;
+
     const marketNews = newsResponse.data;
     const formattedNews = marketNews.map(news => {
       return {
@@ -134,7 +156,7 @@ app.get('/intro', (req, res) => {
     if (accountBalance == null) accountBalance = 0;
     accountBalance = accountBalance + 50000;
 
-    res.render('pages/home', { user: req.session.user, accountBalance, events: formattedNews, marketStatus});
+    res.render('pages/home', { user: req.session.user, accountBalance, events: formattedNews, marketStatus, tsla, aapl, msft});
 } catch (error) {
     console.error('Error fetching data:', error.message);
     res.status(500).send('Internal Server Error');
