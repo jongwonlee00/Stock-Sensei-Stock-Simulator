@@ -98,22 +98,15 @@ app.get('/intro', (req, res) => {
 
  app.get('/home', async (req, res) => {
   try {
-    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
- 
- 
-    // Fetch market status data
+    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; 
     const marketStatusResponse = await axios.get('https://finnhub.io/api/v1/stock/market-status', {
       params: {
-        exchange: 'US', // Replace with the desired exchange code
+        exchange: 'US',
         token: apiKey,
       },
     });
- 
- 
+
     const marketStatus = marketStatusResponse.data;
- 
- 
-    // Fetch market news data
     const newsResponse = await axios.get('https://finnhub.io/api/v1/news', {
       params: {
         token: apiKey,
@@ -132,13 +125,26 @@ app.get('/intro', (req, res) => {
         summary: news.summary,
       };
     });
- 
- 
-    res.render('pages/home', { events: formattedNews, marketStatus });
-  } catch (error) {
+
+    const result = await db.query(`
+        SELECT
+            COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) -
+            COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
+        FROM
+            Transactions t
+        WHERE
+            t.user_id = $1;
+    `, [req.session.user.user_id]);
+
+    let accountBalance = result.account_balance;
+    if (accountBalance == null) accountBalance = 0;
+    accountBalance = accountBalance + 50000;
+
+    res.render('pages/home', { user: req.session.user, accountBalance, events: formattedNews, marketStatus});
+} catch (error) {
     console.error('Error fetching data:', error.message);
     res.status(500).send('Internal Server Error');
-  }
+}
  });
  
 
@@ -151,6 +157,7 @@ app.get('/login', (req, res) => {
   const password = req.body
   res.render('pages/login');
 });
+
 app.get('/account', async (req, res) => {
   try {
     const result = await db.query(`
@@ -303,11 +310,6 @@ app.post('/transactShares', async (req, res) => {
       FROM Stocks
       WHERE name = $1
     `, [req.body.stock_name]);
-    const portfolio_id = await db.query(`
-      SELECT portfolio_id
-      FROM Portfolio
-      WHERE user_id = $1
-    `, [req.session.user.user_id]);
 
     const user_id= await db.query(`
       SELECT user_id
@@ -318,13 +320,12 @@ app.post('/transactShares', async (req, res) => {
     const result = await db.query(`
       INSERT INTO Transactions
         (user_id,
-        portfolio_id,
         stock_id,
         transaction_type,
         transaction_date,
         transaction_price)
-      VALUES ($1, $2, $3, $4, $5, $6)
-    `, [user_id, portfolio_id, stock_id, type, transact_date, share_price]);
+      VALUES ($1, $2, $3, $4, $5)
+    `, [user_id,  stock_id, type, transact_date, share_price]);
     res.send('Transaction completed successfully');
   }catch (err) {
     console.error('Unable to buy shares.', err);
@@ -360,7 +361,7 @@ app.get('/user', auth, async (req, res) => {
 app.get('/transactions', auth, async (req, res) => {
   try {
     const userId = req.session.user.user_id;
-    const result = await db.query('SELECT * FROM transaction WHERE user_id = $1', [userId]);
+    const result = await db.query('SELECT * FROM transactions WHERE user_id = $1', [userId]);
     const transactions = result.rows;
     res.json(transactions);
   } catch (error) {
@@ -387,7 +388,7 @@ app.get('/user_balance', async (req, res) => {
     balance = balance + 50000;
 
     res.json(balance);
-  } catch (err){
+  } catch (error){
     console.error('Error fetching balance:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
