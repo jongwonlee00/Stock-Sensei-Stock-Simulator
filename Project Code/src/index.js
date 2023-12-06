@@ -355,7 +355,7 @@ app.get('/user', auth, async (req, res) => {
 app.get('/transactions', auth, async (req, res) => {
   try {
     const userId = req.session.user.user_id;
-    const result = await db.query('SELECT * FROM transaction WHERE user_id = $1', [userId]);
+    const result = await db.query('SELECT * FROM transactions WHERE user_id = $1', [userId]);
     const transactions = result.rows;
     res.json(transactions);
   } catch (error) {
