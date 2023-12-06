@@ -1,110 +1,184 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu') %>
 <style>
-   body {
-       background-color: black;
-       margin: 0;
-       padding: 0;
+    body {
+        background-color: black;
+        margin: 0;
+        padding: 0;
+    }
+ 
+    main {
+        display: flex;
+        flex-wrap: wrap;
+    }
+ 
+    h1 {
+        width: 100%;
+        padding: 10px;
+    }
+ 
+    .newsBar {
+        background-color: white;
+        overflow: hidden;
+        width: 100%;
+    }
+ 
+    .newsSlider {
+        height: 110px;
+        display: flex;
+        width: 100%;
+        animation: slideAnimation 50s linear infinite;
+    }
+ 
+    .newsItem {
+        flex: 0 0 100%;
+        background-color: white;
+        padding: 5px;
+        box-sizing: border-box;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+ 
+    .newsItem img {
+        max-height: 80px;
+        margin-right: 10px;
+    }
+ 
+    .welcome,
+    .accountBalance,
+    .marketStatus,
+    .top5StockData {
+        flex: 0 0 48%; /* Each card takes up 48% of the width with a small gap in between */
+        margin-right: 10px; 
+        margin-left: 10px; 
+        margin-top: 15px; 
+        margin-bottom: 15px; /* Add some margin between the cards */
+        background-color: #272927;
+        color: white;
+        box-sizing: border-box;
+        padding: 10px;
+        transition: transform 0.3s ease;
+    }
+ 
+    .welcome:hover,
+    .accountBalance:hover,
+    .marketStatus:hover,
+    .top5StockData:hover {
+        transform: scale(1.05);
+    }
+ 
+    .welcome h2 {
+        color: #05A914;
+        font-weight: 800;
+        font-family: 'Arial', sans-serif;
+    }
+    .welcome p {
+        color: white;
+        font-family: 'Arial', sans-serif;
+        font-size: 20px;
+    }
+    .accountBalance h2 {
+        color: #05A914;
+        font-weight: 800;
+        font-family: 'Arial', sans-serif;
+    }
+    .accountBalance p {
+        color: white;
+        font-family: 'Arial', sans-serif;
+        font-size: 20px;
+    }
+    .accountBalance h1{
+        color:#c1ff72;
+        background-color: black;
+    }
+    .marketStatus h2 {
+        color: #05A914;
+        font-weight: 800;
+        font-family: 'Arial', sans-serif;
+    }
+    .marketStatus p {
+        color: white;
+        font-family: 'Arial', sans-serif;
+        font-size: 20px;
+    }
+    .top5StockData h2 {
+        color: #05A914;
+        font-weight: 800;
+        font-family: 'Arial', sans-serif;
+    }
+    .button {
+     background-color:#c1ff72;
+     color: black !important;
+     padding: 15px 20px;
+     text-decoration: none !important;
+     border: none;
+     cursor: pointer;
+     transition: background-color 0.3s;
+     border-radius: 12px;
+     text-align: center;
+     font-size: 12px;
+     font-family: 'Arial', sans-serif;
+     font-weight: 800;
+   }
+    .button:hover {
+     background-color: #05A914;
    }
 
-   main {
-       position: relative;
-   }
-
-   h1 {
-       position: absolute;
-       top: 0;
-       left: 0;
-       padding: 10px;
-   }
-
-   .newsBar {
-       background-color: white;
-       overflow: hidden; /* Hide overflowing content */
-       position: relative;
-   }
-
-   .newsSlider {
-       height: 90px; /* Set the slider height to 90px */
-       display: flex;
-       width: 100%;
-       animation: slideAnimation 50s linear infinite; /* Adjust the duration as needed */
-   }
-
-   .newsItem {
-       flex: 0 0 100%; /* Take up the full width of the screen */
-       background-color: white; /* Add background color for each news item */
-       padding: 5px;
-       box-sizing: border-box;
-       margin: 0;
-       display: flex;
-       align-items: center; /* Center content vertically */
-   }
-
-   .newsItem img {
-       max-height: 80px; /* Adjust the max height of the image */
-       margin-right: 10px; /* Add margin to the right of the image */
-   }
-
-   .newsHeadline,
-   .newsSummary {
-       padding: 2px;
-   }
-
-   .marketStatus {
-       background-color: green; /* Set the background color to green */
-       color: white; /* Set text color to white */
-       padding: 10px;
-       margin-top: 20px; /* Add margin to separate market status from news */
-       margin-right: 1100px;
-   }
-
-   .marketStatus h2 {
-       color: white; /* Set header text color to white */
-   }
-
-   .marketStatus p {
-       margin: 0;
-   }
-   @keyframes slideAnimation {
-       0% {
-           transform: translateX(0);
-       }
-       33.33% {
-           transform: translateX(-100%);
-       }
-       66.66% {
-           transform: translateX(-200%);
-       }
-       100% {
-           transform: translateX(0);
-       }
-   }
-</style>
+    @keyframes slideAnimation {
+        0% {
+            transform: translateX(0);
+        }
+        33.33% {
+            transform: translateX(-100%);
+        }
+        66.66% {
+            transform: translateX(-200%);
+        }
+        100% {
+            transform: translateX(0);
+        }
+    }
+ </style>
+ 
 <main>
-   <h1>Home</h1>
-   <div class="newsBar">
-       <div class="newsSlider">
-           <% events.slice(0,15).forEach(article => { %>
-               <div class="newsItem">
-                   <img src="<%= article.image %>" alt="News Image" class="newsImage">
-                   <div>
-                       <h3 class="newsHeadline"><%= article.headline %></h3>
-                       <p class="newsSummary"><%= article.summary %></p>
-                   </div>
-               </div>
-           <% }); %>
-       </div>
-   </div>
+    <div class="newsBar">
+        <div class="newsSlider">
+            <% events.slice(0,15).forEach(article => { %>
+                <div class="newsItem">
+                    <img src="<%= article.image %>" alt="News Image" class="newsImage">
+                    <div>
+                        <h3 class="newsHeadline"><%= article.headline %></h3>
+                        <p class="newsSummary"><%= article.summary %></p>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+    <div class="welcome">
+        <h2>Welcome, <%= user.username %></h2>
+        <p> Explore Stock Sensei! You are currently on the home page, where you can view your balance as well as information that could influence your trading decisions. Good luck choosing which stocks to invest in, and which information you should pay attention to.</p>
+        <p> If you want to learn more about finance before beginning then:</p>
+        <a href="/learn" class="button">click here to learn more</a>
+    </div>
 
-   <div class="marketStatus">
-    <h2>Market Status</h2>
-    <p><strong>Exchange:</strong> <%= marketStatus.exchange %></p>
-    <p><strong>Session:</strong> <%= marketStatus.session %></p>
-    <p><strong>Is Open:</strong> <%= marketStatus.isOpen ? 'Yes' : 'No' %></p>
-    <!-- Add more information as needed -->
-</div>
+    <div class ="accountBalance">
+        <h2>Account Balance</h2>
+        <p> Every user starts with $50,000. Invest wisely to watch your cash grow.</p>
+        <h1>Current Balance: $<%= accountBalance %></h1>
+    </div>
 
-</main>
+    <div class="marketStatus">
+       <h2>Market Status</h2>
+       <p><strong>Exchange:</strong> <%= marketStatus.exchange %></p>
+       <p><strong>Session:</strong> <%= marketStatus.session %></p>
+       <p><strong>Is Open:</strong> <%= marketStatus.isOpen ? 'Yes' : 'No' %></p>
+    </div>
+ 
+    <div class="top5StockData">
+       <h2>Trending Stocks</h2>
+    </div>
+ </main>
+ 
 
 <%- include ('../partials/footer') %>

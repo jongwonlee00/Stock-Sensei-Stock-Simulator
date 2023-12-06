@@ -12,16 +12,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            background-color: #353535;
+            background-color: black;
             color: #ffffff;
             font-family: 'Arial', sans-serif;
         }
 
         h1 {
-            color: #00cc00;
-            /* position: absolute;
-            bottom: 50px; Adjust the top distance as needed */
-            
+            color: #05A914;
+            font-weight: 800;
+            font-family: 'Arial', sans-serif;
+                
         }
 
         #buyButton {
@@ -121,18 +121,23 @@
             color: blanchedalmond;
             font-size: 20px;
         }
+        .stockChartDiv{
+            background-color: #333333;
+        }
     </style>
      <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 </head>
 <body>
     <h1>Stock Chart - <%= stockSymbol %></h1>
 
+    <div class = "stockChartDiv">
     <canvas id="stockChart" width="800" height="400"></canvas>
     <div id="graph-caption">$100,000,000</div>
     <div id="buyPrice">Buy price: 0</div>
     <div id="sellPrice">Sell price: 0</div>
     <div id="shareAmount">Total Shares: 0</div>
 
+    
     <div id="openPriceData"></div>
     
     
@@ -162,6 +167,7 @@
             <option value="max">MAX</option>
         </select>
     </div>
+</div>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             <!-- Navbar brand -->
