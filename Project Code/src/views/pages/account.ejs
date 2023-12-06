@@ -37,12 +37,32 @@
     a{
       color: #4CAF50; /* Green color for links */
     }
+
+    .card {
+        background-color: black;
+        color: white; /* Set text color to white for better visibility on black background */
+        padding: 20px;
+        border-radius: 10px; /* Optional: Add border-radius for rounded corners */
+    }
+
+    .card h2{
+        color: cyan; 
+    }
+
+    .card p{
+        font-size: 18px; 
+    }
+
 </style>
 
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
 
 <main>
     <h1>User Account</h1>
         <section>
+
             <div class="card">
                 <p>Welcome, <%= user.username %>!</p>
             </div>
@@ -50,7 +70,9 @@
             <div class="card">
                 <h2>Portfolio</h2>
                 <p>Account Balance: $ <%= accountBalance %></p>
+                <canvas id="accountBalanceChart"></canvas>
             </div>
+
             <div class="container">
                 <form action="/change_password" method="POST">
             
@@ -71,5 +93,87 @@
                     
         </section>
 </main>
+<script>
+  // Function to fetch and display the latest transactions
+  async function displayLatestTransactions() {
+      try {
+          const response = await fetch('/transactions');
+          const transactions = await response.json();
+
+          // Extract the latest three transactions
+          const latestTransactions = transactions.slice(0, 3);
+
+          // Get the element where you want to display the transactions
+          const transactionsList = document.getElementById('latestTransactions');
+
+          // Update the HTML content with the latest transactions
+          latestTransactions.forEach(transaction => {
+              const listItem = document.createElement('li');
+              listItem.textContent = `Transaction ID: ${transaction.transaction_id}, Type: ${transaction.transaction_type}, Amount: $${transaction.transaction_price}`;
+              transactionsList.appendChild(listItem);
+          });
+
+      } catch (error) {
+          console.error('Error fetching latest transactions:', error);
+      }
+  }
+
+  // Call the function to display the latest transactions on page load
+  displayLatestTransactions();
+
+  function initializeChart(accountBalance) {
+        const ctx = document.getElementById('accountBalanceChart').getContext('2d');
+
+        // Calculate the remaining balance (100 - accountBalance)
+        // const cash = accountBalance - stocks - ETFs
+        const remainingBalance = 100 - accountBalance;
+
+        // Create the data for the chart
+        const data = {
+            labels: [
+                'Cash',
+                'ETF',
+                'Stocks'
+            ],
+            datasets: [{
+                label: 'Current balance : ',
+                data: [accountBalance, remainingBalance],
+                backgroundColor: ['pink', 'blue'], // Pink for account balance, transparent for the empty part
+                borderWidth: 1
+            }]
+        };
+
+
+
+        // Create the options for the chart
+        const options = {
+            cutout: '70%', // Adjust the cutout percentage as needed
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            elements: {
+                center: {
+                    text: `$${accountBalance}`, // Display the account balance value in the center
+                    color: 'green', // Color of the text
+                    fontStyle: 'Arial', // Font style of the text
+                    sidePadding: 20 // Padding around the text
+                }
+            }
+        };
+
+        // Create the pie chart
+        const pieDonutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: options
+        });
+    }
+
+    initializeChart(<%= accountBalance %>); // Assuming accountBalance is a percentage
+
+</script>
 
 <%- include ('../partials/footer') %>
