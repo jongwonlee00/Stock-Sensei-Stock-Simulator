@@ -57,7 +57,7 @@
         }
 
         .card {
-            width: calc(90% + 36px);
+            width: calc(90% + 56px);
             box-sizing: border-box;
             border: 1px solid #ddd;
             padding: 55px;
@@ -71,6 +71,14 @@
             padding: 20px;
             float: left;
         }
+
+        /* .card three {
+            width: calc(90% + 36px);
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            padding: 55px;
+            transition: transform 0.3s ease-in-out; /* Added transition for smooth hover effect */
+        } */
 
         .card p {
             color: green;
@@ -102,6 +110,15 @@
 <main>
     <h1><p><%= user.username %>'s Account</p></h1>
     <section class="card-container">
+      <!-- <div class="card three">
+        <h2>Latest Transactions</h2>
+        <ul id="latestTransactions"></ul>
+      </div> -->
+      <div class="card h2">
+        <h2>Investment Portfolio</h2>
+        <p>Account Balance: $ <%= accountBalance %></p>
+        <canvas id="accountBalanceChart"></canvas>
+      </div>
         <!-- Account Card -->
         <div class="card">
 
@@ -119,13 +136,6 @@
                     <input type="submit" value="Change Password" />
                 </div>
             </form>
-        </div>
-
-        <!-- Portfolio Card -->
-        <div class="card h2">
-          <h2>Investment Portfolio</h2>
-          <p>Account Balance: $ <%= accountBalance %></p>
-          <canvas id="accountBalanceChart"></canvas>
         </div>
     </section>
 </main>
@@ -166,9 +176,8 @@
   function initializeChart(accountBalance) {
         const ctx = document.getElementById('accountBalanceChart').getContext('2d');
 
-        const etfBalance = 50000;
-        const stocksBalance = 50000;
-        const cashBalance = 50000;
+        const stocksBalance = accountBalance - 50000;
+        const cashBalance = accountBalance;
 
         /*
         const etfBalance = 0;
@@ -179,15 +188,14 @@
         const data = {
             labels: [
                 'Cash',
-                'ETF',
                 'Stocks'
             ],
             datasets: [{
                 width: "10px",
                 height: "10px",
                 label: 'Current balance : ',
-                data: [cashBalance, etfBalance, stocksBalance],
-                backgroundColor: ['pink', 'purple', 'cyan'], 
+                data: [cashBalance, stocksBalance],
+                backgroundColor: ['pink', 'cyan'], 
                 borderradius: 10, /* Optional: Add border-radius for rounded corners */
                 borderWidth: 5,
                 weight: 2,
