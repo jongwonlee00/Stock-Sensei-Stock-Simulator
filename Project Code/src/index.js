@@ -391,8 +391,8 @@ app.get('/user_balance', async (req, res) => {
     const user_id = req.session.user.user_id;
     const result = await db.query(`
     SELECT
-      COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) -
-      COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
+      COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) -
+      COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
     FROM
       Transactions t
     WHERE
