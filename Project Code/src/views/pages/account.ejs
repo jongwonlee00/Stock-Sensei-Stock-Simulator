@@ -42,15 +42,27 @@
         background-color: black;
         color: white; /* Set text color to white for better visibility on black background */
         padding: 20px;
-        border-radius: 10px; /* Optional: Add border-radius for rounded corners */
+        float: left;
     }
 
     .card h2{
-        color: cyan; 
+        color: green;
     }
 
     .card p{
         font-size: 18px; 
+    }
+
+    .container{
+        background-color: black;
+        float: right;
+    }
+
+    .card {
+        background-color: black;
+        color: white; /* Set text color to white for better visibility on black background */
+        padding: 20px;
+        float: left;
     }
 
 </style>
@@ -60,15 +72,11 @@
 </head>
 
 <main>
-    <h1>User Account</h1>
+    <h1><%= user.username %>'s Account</h1>
         <section>
 
             <div class="card">
-                <p>Welcome, <%= user.username %>!</p>
-            </div>
-        
-            <div class="card">
-                <h2>Portfolio</h2>
+                <h2>Investment Portfolio</h2>
                 <p>Account Balance: $ <%= accountBalance %></p>
                 <canvas id="accountBalanceChart"></canvas>
             </div>
@@ -89,7 +97,7 @@
                         <input type="submit" value="Change Password" />
                     </div>
 
-                    <div class="card">
+                    <div class="card2">
                       <h2>Latest Transactions</h2>
                       <ul id="latestTransactions"></ul>
                     </div>
@@ -123,17 +131,22 @@
       }
   }
 
-  // Call the function to display the latest transactions on page load
+
   displayLatestTransactions();
 
   function initializeChart(accountBalance) {
         const ctx = document.getElementById('accountBalanceChart').getContext('2d');
 
-        // Calculate the remaining balance (100 - accountBalance)
-        // const cash = accountBalance - stocks - ETFs
-        const remainingBalance = 100 - accountBalance;
+        const etfBalance = 50000;
+        const stocksBalance = 50000;
+        const cashBalance = 50000;
 
-        // Create the data for the chart
+        /*
+        const etfBalance = 0;
+        const stocksBalance = currentIndex * currentAmount;
+        const cashBalance = 50000 - etfBalance - stocksBalance;
+        */
+
         const data = {
             labels: [
                 'Cash',
@@ -141,35 +154,30 @@
                 'Stocks'
             ],
             datasets: [{
+                width: "10px",
+                height: "10px",
                 label: 'Current balance : ',
-                data: [accountBalance, remainingBalance],
-                backgroundColor: ['pink', 'blue'], // Pink for account balance, transparent for the empty part
-                borderWidth: 1
+                data: [cashBalance, etfBalance, stocksBalance],
+                backgroundColor: ['pink', 'purple', 'cyan'], 
+                borderradius: 10, /* Optional: Add border-radius for rounded corners */
+                borderWidth: 5,
+                weight: 2,
+                rotation: 1,
+                spacing: 1
             }]
         };
 
-
-
-        // Create the options for the chart
         const options = {
-            cutout: '70%', // Adjust the cutout percentage as needed
+            cutout: '70%', 
+            aspectRatio : 0.8,
             legend: {
                 display: false
             },
             tooltips: {
                 enabled: false
             },
-            elements: {
-                center: {
-                    text: `$${accountBalance}`, // Display the account balance value in the center
-                    color: 'green', // Color of the text
-                    fontStyle: 'Arial', // Font style of the text
-                    sidePadding: 20 // Padding around the text
-                }
-            }
         };
 
-        // Create the pie chart
         const pieDonutChart = new Chart(ctx, {
             type: 'doughnut',
             data: data,
@@ -177,9 +185,10 @@
         });
     }
 
-    initializeChart(<%= accountBalance %>); // Assuming accountBalance is a percentage
+    initializeChart(<%= accountBalance %>); 
 
 </script>
+
 <script>
   // Function to fetch and display the latest transactions
   async function displayLatestTransactions() {
