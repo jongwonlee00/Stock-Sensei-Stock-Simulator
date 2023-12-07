@@ -1,20 +1,27 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu') %>
 
-<style>
-    body {
-      background-color: black;
-      color: green;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: black;
+            color: green;
+        }
 
-    header, main, footer {
-      padding: 20px;
-    }
+        header, main, footer {
+            padding: 20px;
+        }
 
-    .form-group {
-      margin-bottom: 20px; /* Add margin between form groups */
-    }
+        .form-group {
+            margin-bottom: 20px;
+        }
 
+<<<<<<< HEAD
     input[type="password"],
     input[type="submit"] {
       border: 1px solid #ccc; /* Add a border to input elements */
@@ -105,7 +112,122 @@
             </div>            
                     
         </section>
+=======
+        input[type="password"],
+        input[type="submit"] {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="password"] {
+            width: calc(100% - 16px);
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        a {
+            color: #4CAF50;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .card {
+            width: calc(90% + 36px);
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            padding: 55px;
+            transition: transform 0.3s ease-in-out; /* Added transition for smooth hover effect */
+        }
+
+        .card h2 {
+            background-color: white;
+            color: green; /* Set text color to white for better visibility on black background */
+            font-size: 20px;
+            padding: 20px;
+            float: left;
+        }
+
+        .card p {
+            color: green;
+            text-align: center;
+        }
+
+    /* Increase width for Latest Transactions */
+        .card ul {
+            width: calc(100% + 20px);
+            list-style: none;
+            padding: 0;
+        }
+        .card li {
+            margin-bottom: 10px;
+        }
+
+        /* Hover Effect */
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card p.account-balance {
+            font-size: 20px;
+            font-weight: bold; 
+        }
+    </style>
+</head>
+<body>
+
+<main>
+    <h1><p><%= user.username %>'s Account</p></h1>
+    <section class="card-container">
+        <!-- Account Card -->
+        <div class="card">
+
+            <form action="/change_password" method="POST">
+                <div class="form-group">
+                    <label style="font-size:20px; text-align:center; margin-bottom:20px; color: green; text-transform: uppercase; letter-spacing: 2px;">Change Password</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">New Password</label>
+                    <input type="password" id="password" name="password" style="width: calc(100% - 16px); padding: 8px; box-sizing: border-box; margin-bottom: 25px;" />
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Change Password" />
+                </div>
+            </form>
+        </div>
+
+        <!-- Portfolio Card -->
+        <div class="card h2">
+          <h2>Investment Portfolio</h2>
+          <p>Account Balance: $ <%= accountBalance %></p>
+          <canvas id="accountBalanceChart"></canvas>
+        </div>
+    </section>
+>>>>>>> ddf47fc91d5010fce6d10a16620f189549202b8e
 </main>
+
+</body>
+</html>
+
+
+
 <script>
   // Function to fetch and display the latest transactions
   async function displayLatestTransactions() {
@@ -216,6 +338,59 @@
 
   // Call the function to display the latest transactions on page load
   displayLatestTransactions();
+
+  function initializeChart(accountBalance) {
+        const ctx = document.getElementById('accountBalanceChart').getContext('2d');
+
+        const etfBalance = 50000;
+        const stocksBalance = 50000;
+        const cashBalance = 50000;
+
+        /*
+        const etfBalance = 0;
+        const stocksBalance = currentIndex * currentAmount;
+        const cashBalance = 50000 - etfBalance - stocksBalance;
+        */
+
+        const data = {
+            labels: [
+                'Cash',
+                'ETF',
+                'Stocks'
+            ],
+            datasets: [{
+                width: "10px",
+                height: "10px",
+                label: 'Current balance : ',
+                data: [cashBalance, etfBalance, stocksBalance],
+                backgroundColor: ['pink', 'purple', 'cyan'], 
+                borderradius: 10, /* Optional: Add border-radius for rounded corners */
+                borderWidth: 5,
+                weight: 2,
+                rotation: 1,
+                spacing: 1
+            }]
+        };
+
+        const options = {
+            cutout: '70%', 
+            aspectRatio : 0.8,
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+        };
+
+        const pieDonutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: options
+        });
+    }
+
+    initializeChart(<%= accountBalance %>);
 </script>
 
 <%- include ('../partials/footer') %>

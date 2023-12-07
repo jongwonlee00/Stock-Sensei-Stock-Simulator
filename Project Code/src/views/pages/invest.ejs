@@ -304,14 +304,14 @@
             // Update the labels and data for the chart
             const labels = stockCandleData.timestamps
                 .slice(0, currentIndex + 1)
-                .map(timestamp => new Date(timestamp * 1000).toLocaleDateString());
+                .map(timestamp => new Date(timestamp).toLocaleDateString());
 
             const data = stockCandleData.openPrices.slice(0, currentIndex + 1);
 
             // Display the current value
             document.getElementById('outputContainer').innerHTML = `
                 <p>Open Price: ${stockCandleData.openPrices[currentIndex]}</p>
-                <p>Time Stamp: ${new Date(stockCandleData.timestamps[currentIndex] * 1000).toLocaleString()}</p>
+                <p>Time Stamp: ${new Date(stockCandleData.timestamps[currentIndex]).toLocaleString()}</p>
                 <p>Iterator Count: ${currentIndex}</p>
             `;
 
@@ -420,14 +420,14 @@
             // Update the labels and data for the chart
             const labels = stockCandleData.timestamps
                 .slice(0, currentIndex + 1)
-                .map(timestamp => new Date(timestamp * 1000).toLocaleDateString());
+                .map(timestamp => new Date(timestamp).toLocaleDateString());
 
             const data = stockCandleData.openPrices.slice(0, currentIndex + 1);
 
             // Display the current value
             document.getElementById('outputContainer').innerHTML = `
                 <p>Open Price: ${stockCandleData.openPrices[currentIndex]}</p>
-                <p>Time Stamp: ${new Date(stockCandleData.timestamps[currentIndex] * 1000).toLocaleString()}</p>
+                <p>Time Stamp: ${new Date(stockCandleData.timestamps[currentIndex]).toLocaleString()}</p>
                 <p>Iterator Count: ${currentIndex}</p>
             `;
 
@@ -469,7 +469,7 @@
             const stockChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: stockCandleData.timestamps.map(timestamp => new Date(timestamp * 1000).toLocaleDateString()),
+                    labels: stockCandleData.timestamps.map(timestamp => new Date(timestamp).toLocaleDateString()),
                     datasets: [{
                         label: 'Open Prices',
                         data: stockCandleData.openPrices,
