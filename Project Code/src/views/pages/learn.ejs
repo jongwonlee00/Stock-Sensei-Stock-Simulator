@@ -1,3 +1,6 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -18,16 +21,9 @@
             background: #777;
             color: white;
             position: relative;
-            top: 40px;
+            top: 0px;
             background-position: center;
             background-size: cover;
-        }
-        .container{
-            position: absolute;
-            bottom: 0px;
-            left: 0;
-            right: 0;
-            padding: 0px;
         }
         .container1{
             position: relative;
@@ -42,6 +38,14 @@
             left: 0;
             right: 0;
             padding: 0px;
+        }
+        .container3{
+            position: relative;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            top: -20px;
+            padding: 60px;
         }
         .font{
           font-family: Garamond, serif;
@@ -68,44 +72,6 @@
             color: white;
         }
     </style>
-    <nav class="navbar navbar-expand-sm" style="top: -10px;">
-        <div class="container2">
-          <button
-            class="navbar-toggler ms-auto"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbar-collapse"
-            aria-controls="navbar"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbar-collapse">
-            <ul class="navbar-nav me-auto">
-              
-                <!--come back to this:
-                img src="Project Code/src/resources/img/logo.png"> -->
-              <li class="nav-item">
-                  <a class="nav-link" href="/home">Home</a>
-              </li>
-            </ul>
-            <div class="nav-item me-1">
-                  <a class="nav-link" href="/invest">Invest</a>
-            </div>
-            <div class="nav-item me-1">
-                  <a class="nav-link" href="/learn">Learn</a>
-            </div>
-            <div class="nav-item me-1">
-                  <a class="nav-link" href="/account">Profile</a>
-            </div>
-            <div class="nav-item me-1">
-              <a class="nav-link" href="/logout">Logout</a>
-        </div>
-          </div>
-        </div>
-      </nav>
-     
-    
 
       <!-- CAROUSEL STUFF  | NavNews is API req -->
     <div id="myCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
@@ -115,12 +81,12 @@
             <li data-bs-target="#myCarousel" data-bs-slide-to="2"></li>
         </ol>
 
-    <div class="carousel-inner">
+    <div class="carousel-inner" style="top: 0px;">
         <div class="carousel-item active">
             <div class="overlay-image" style="background-image:url(<%= NavNews[3].image %>);"></div>
             <div class="container1">
-            <h1 class="font" style="position:relative; top:80px;"><%= NavNews[3].headline %></h1>
-            <a href="<%= NavNews[3].url %>" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 30px; left: -300px; background-color: black;"> 
+            <h1 class="font" style="position:relative; top:120px;"><%= NavNews[3].headline %></h1>
+            <a href="<%= NavNews[3].url %>" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 60px; left: -300px; background-color: black;"> 
                 Original Article
             </a>
         </div>
@@ -129,8 +95,8 @@
         <div class="carousel-item">
             <div class="overlay-image" style="background-image:url(<%= NavNews[4].image %>);"></div>
         <div class="container1">
-            <h1 class="font" style="position:relative; top:80px;"><%= NavNews[4].headline %></h1>
-            <a href="<%= NavNews[4].url %>" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 30px; left: -300px; background-color: black;"> 
+            <h1 class="font" style="position:relative; top:120px;"><%= NavNews[4].headline %></h1>
+            <a href="<%= NavNews[4].url %>" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 60px; left: -300px; background-color: black;"> 
                 Original Article
             </a>
         </div>
@@ -139,8 +105,8 @@
         <div class="carousel-item">
             <div class="overlay-image" style="background-image:url(<%= NavNews[5].image %>);"></div>
             <div class="container1">
-                <h1 class="font" style="position:relative; top:80px;"><%= NavNews[5].headline %></h1>
-                <a href="<%= NavNews[5].url %>" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 30px; left: -300px; background-color: black;"> 
+                <h1 class="font" style="position:relative; top:120px;"><%= NavNews[5].headline %></h1>
+                <a href="<%= NavNews[5].url %>" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 60px; left: -300px; background-color: black;"> 
                     Original Article
                 </a>
             </div>
@@ -158,7 +124,7 @@
 
 
 <!-- CONTAINER STUFF -->
-<div class="container" id="intro" style="border: 50px; position: relative; top: 10px;">
+<div class="container3" id="intro">
     <div class="row">
       <div class="col-4">
         <div class="card" id="card-1">Intro</div>
@@ -198,6 +164,16 @@
         <div class="card-body" >
             <h5 class="card-title">Managing your risk</h5>
             <p class="card-text">Here you will learn how to manage the risk in your portfolio. </p>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card" id="card-3">Financial Quiz</div>
+        <a href="/quiz">
+        <img src="portfolio.jpeg" class="card-img-top" alt="Image Representing Quiz Link."  width="400" height="200">
+        </a>
+        <div class="card-body" >
+            <h5 class="card-title">Quiz about financial topics</h5>
+            <p class="card-text">Test your knowledge regarding topics learned!</p>
         </div>
       </div>
     </div>
