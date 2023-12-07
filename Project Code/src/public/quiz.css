@@ -17,7 +17,7 @@ body{
 
 main{
     width: 100%;
-    min-height: 100vh;
+    min-height: 800px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -31,14 +31,15 @@ main{
 }
 
 .game-quiz-container{
-    width: 40rem;
-    height: 30rem;
+    width: 60rem;
+    height: 45rem;
     background-color: turquoise;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
     border-radius: 30px;
+    top: -100px;
 }
 
 .game-details-container{
@@ -59,8 +60,8 @@ main{
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid darkgray;
-    border-radius: 25px;
+    border: 3px solid darkgray;
+    border-radius: 45px;
 }
 
 .game-question-container h1{
@@ -79,10 +80,10 @@ main{
 }
 
 .game-options-container span{
-    width: 45%;
+    width: 100%;
     height: 3rem;
     border: 2px solid darkgray;
-    border-radius: 20px;
+    border-radius: 40px;
     overflow: hidden;
 }
 span label{
@@ -161,7 +162,7 @@ input[type=radio]:checked ~ .option {
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    border-radius: 25px;
+    border-radius: 35px;
 }
 
 .modal-content-container h1{

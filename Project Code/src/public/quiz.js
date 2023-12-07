@@ -1,229 +1,121 @@
 const questions = [
     {
-        question: "How many days makes a week ?",
-        optionA: "10 days",
-        optionB: "14 days",
-        optionC: "5 days",
-        optionD: "7 days",
+        question: "A business organized as a separate legal entity is a",
+        optionA: "corporation",
+        optionB: "proprietor",
+        optionC: "government unit",
+        optionD: "partnership",
+        correctOption: "optionA"
+    },
+
+    {
+        question: "Which of the following is not one of the three forms of business organization?",
+        optionA: "Corporations",
+        optionB: "Partnerships",
+        optionC: "Proprietorships",
+        optionD: "Investors",
         correctOption: "optionD"
     },
 
     {
-        question: "How many players are allowed on a soccer pitch ?",
-        optionA: "10 players",
-        optionB: "11 players",
-        optionC: "9 players",
-        optionD: "12 players",
+        question: "Which of the following would not be considered an internal user of accounting data for the Xanadu Company",
+        optionA: "President of the company",
+        optionB: "Production manager",
+        optionC: "Merchandise inventory clerk",
+        optionD: "President of the employee's labor union",
+        correctOption: "optionD"
+    },
+
+    {
+        question: "The liability created by a business when it purchases coffee beans and coffee cups on credit from suppliers is termed a(n)",
+        optionA: "account payable.",
+        optionB: "account receivable.",
+        optionC: "revenue",
+        optionD: "expense",
+        correctOption: "optionA"
+    },
+
+    {
+        question: "The right to receive money in the future is called a(n)",
+        optionA: "account payable",
+        optionB: "account receivable",
+        optionC: "liability",
+        optionD: "revenue",
         correctOption: "optionB"
     },
 
     {
-        question: "Who was the first President of USA ?",
-        optionA: "Donald Trump",
-        optionB: "Barack Obama",
-        optionC: "Abraham Lincoln",
-        optionD: "George Washington",
-        correctOption: "optionD"
-    },
-
-    {
-        question: "30 days has ______ ?",
-        optionA: "January",
-        optionB: "December",
-        optionC: "June",
-        optionD: "August",
-        correctOption: "optionC"
-    },
-
-    {
-        question: "How manay hours can be found in a day ?",
-        optionA: "30 hours",
-        optionB: "38 hours",
-        optionC: "48 hours",
-        optionD: "24 hours",
-        correctOption: "optionD"
-    },
-
-    {
-        question: "Which is the longest river in the world ?",
-        optionA: "River Nile",
-        optionB: "Long River",
-        optionC: "River Niger",
-        optionD: "Lake Chad",
-        correctOption: "optionA"
-    },
-
-    {
-        question: "_____ is the hottest Continent on Earth ?",
-        optionA: "Oceania",
-        optionB: "Antarctica",
-        optionC: "Africa",
-        optionD: "North America",
-        correctOption: "optionC"
-    },
-
-    {
-        question: "Which country is the largest in the world ?",
-        optionA: "Russia",
-        optionB: "Canada",
-        optionC: "Africa",
-        optionD: "Egypt",
-        correctOption: "optionA"
-    },
-
-    {
-        question: "Which of these numbers is an odd number ?",
-        optionA: "Ten",
-        optionB: "Twelve",
-        optionC: "Eight",
-        optionD: "Eleven",
-        correctOption: "optionD"
-    },
-
-    {
-        question: `"You Can't see me" is a popular saying by`,
-        optionA: "Eminem",
-        optionB: "Bill Gates",
-        optionC: "Chris Brown",
-        optionD: "John Cena",
-        correctOption: "optionD"
-    },
-
-    {
-        question: "Where is the world tallest building located ?",
-        optionA: "Africa",
-        optionB: "California",
-        optionC: "Dubai",
-        optionD: "Italy",
-        correctOption: "optionC"
-    },
-
-    {
-        question: "The longest river in the United Kingdom is ?",
-        optionA: "River Severn",
-        optionB: "River Mersey",
-        optionC: "River Trent",
-        optionD: "River Tweed",
-        correctOption: "optionA"
-    },
-
-
-    {
-        question: "How many permanent teeth does a dog have ?",
-        optionA: "38",
-        optionB: "42",
-        optionC: "40",
-        optionD: "36",
+        question: "The cost of assets consumed or services used is also known as",
+        optionA: "a revenue",
+        optionB: "an expense",
+        optionC: "a liability",
+        optionD: "an asset",
         correctOption: "optionB"
     },
 
     {
-        question: "Which national team won the football World cup in 2018 ?",
-        optionA: "England",
-        optionB: "Brazil",
-        optionC: "Germany",
-        optionD: "France",
+        question: "The best definition of assets is the",
+        optionA: "cash owned by the company",
+        optionB: "collections of resources belonging to the company and the claims on these resources.",
+        optionC: "owners’ investment in the business",
+        optionD: "resources belonging to a company that have future benefit to the company",
         correctOption: "optionD"
     },
 
     {
-        question: "Which US state was Donald Trump Born ?",
-        optionA: "New York",
-        optionB: "California",
-        optionC: "New Jersey",
-        optionD: "Los Angeles",
-        correctOption: "optionA"
-    },
-
-    {
-        question: "How man states does Nigeria have ?",
-        optionA: "24",
-        optionB: "30",
-        optionC: "36",
-        optionD: "37",
-        correctOption: "optionC"
-    },
-
-    {
-        question: "____ is the capital of Nigeria ?",
-        optionA: "Abuja",
-        optionB: "Lagos",
-        optionC: "Calabar",
-        optionD: "Kano",
-        correctOption: "optionA"
-    },
-
-    {
-        question: "Los Angeles is also known as ?",
-        optionA: "Angels City",
-        optionB: "Shining city",
-        optionC: "City of Angels",
-        optionD: "Lost Angels",
-        correctOption: "optionC"
-    },
-
-    {
-        question: "What is the capital of Germany ?",
-        optionA: "Georgia",
-        optionB: "Missouri",
-        optionC: "Oklahoma",
-        optionD: "Berlin",
-        correctOption: "optionD"
-    },
-
-    {
-        question: "How many sides does an hexagon have ?",
-        optionA: "Six",
-        optionB: "Sevene",
-        optionC: "Four",
-        optionD: "Five",
-        correctOption: "optionA"
-    },
-
-    {
-        question: "How many planets are currently in the solar system ?",
-        optionA: "Eleven",
-        optionB: "Seven",
-        optionC: "Nine",
-        optionD: "Eight",
-        correctOption: "optionD"
-    },
-
-    {
-        question: "Which Planet is the hottest ?",
-        optionA: "Jupitar",
-        optionB: "Mercury",
-        optionC: "Earth",
-        optionD: "Venus",
+        question: "Dividends are reported on the",
+        optionA: "income statement.",
+        optionB: "retained earnings statement",
+        optionC: "balance sheet",
+        optionD: "income statement and balance sheet.",
         correctOption: "optionB"
     },
 
     {
-        question: "where is the smallest bone in human body located?",
-        optionA: "Toes",
-        optionB: "Ears",
-        optionC: "Fingers",
-        optionD: "Nose",
+        question: "Which of the following is an asset?",
+        optionA: "Accounts Receivable",
+        optionB: "Accounts Payable",
+        optionC: "Common Stock",
+        optionD: "Dividends",
+        correctOption: "optionA"
+    },
+
+    {
+        question: "To show how successfully your business performed during a period of time, you would report its",
+        optionA: "Balance sheet",
+        optionB: "Income statement",
+        optionC: "statement of cash flows",
+        optionD: "retained earnings statements",
         correctOption: "optionB"
     },
 
     {
-        question: "How many hearts does an Octopus have ?",
-        optionA: "One",
-        optionB: "Two",
-        optionC: "Three",
-        optionD: "Four",
-        correctOption: "optionC"
+        question: "Which of the following financial statements is concerned with the company at a point in time?",
+        optionA: "Balance sheet",
+        optionB: "Income statement",
+        optionC: "Retained earnings statement",
+        optionD: "Statement of cash flows",
+        correctOption: "optionA"
     },
 
     {
-        question: "How many teeth does an adult human have ?",
-        optionA: "28",
-        optionB: "30",
-        optionC: "32",
-        optionD: "36",
-        correctOption: "optionC"
-    }
+        question: "An income statement",
+        optionA: "summarizes the changes in retained earnings for a specific period of time.",
+        optionB: "reports the changes in assets, liabilities, and stockholders’ equity over a period of time.",
+        optionC: "reports the assets, liabilities, and stockholders’ equity at a specific date",
+        optionD: "presents the revenues and expenses for a specific period of time.",
+        correctOption: "optionD"
+    },
+
+
+    {
+        question: "Ashley’s Accessory Shop started the year with total assets of $210,000 and total liabilities of $120,000. During the year the business recorded $330,000 in revenues, $165,000 in expenses, and dividends of $60,000. The net income reported by Ashley’s Accessory Shop for the year was",
+        optionA: "$120,000",
+        optionB: "$150,000",
+        optionC: "$195,000",
+        optionD: "$165,000",
+        correctOption: "optionD"
+    },
 
 ]
 
