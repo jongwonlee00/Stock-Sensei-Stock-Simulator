@@ -21,98 +21,6 @@
             margin-bottom: 20px;
         }
 
-<<<<<<< HEAD
-    input[type="password"],
-    input[type="submit"] {
-      border: 1px solid #ccc; /* Add a border to input elements */
-      border-radius: 4px; /* Add border-radius for a rounded appearance */
-    }
-    input[type="password"] {
-      width: calc(100% - 16px);
-      padding: 8px;
-      box-sizing: border-box;
-    }
-  
-    input[type="submit"] {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50; /* Green background color for submit button */
-      color: #fff; /* White text color for submit button */
-      cursor: pointer;
-    }
-  
-    a{
-      color: #4CAF50; /* Green color for links */
-    }
-
-    .card {
-        background-color: black;
-        color: white; /* Set text color to white for better visibility on black background */
-        padding: 20px;
-        float: left;
-    }
-
-    .card h2{
-        color: green;
-    }
-
-    .card p{
-        font-size: 18px; 
-    }
-
-    .container{
-        background-color: black;
-        float: right;
-    }
-
-    .card {
-        background-color: black;
-        color: white; /* Set text color to white for better visibility on black background */
-        padding: 20px;
-        float: left;
-    }
-
-</style>
-
-<head>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-
-<main>
-    <h1><%= user.username %>'s Account</h1>
-        <section>
-
-            <div class="card">
-                <h2>Investment Portfolio</h2>
-                <p>Account Balance: $ <%= accountBalance %></p>
-                <canvas id="accountBalanceChart"></canvas>
-            </div>
-
-            <div class="container">
-                <form action="/change_password" method="POST">
-            
-                    <div class="form-group">
-                        <label style="font-size:20px; text-align:center; margin-bottom:20px; color: green; text-transform: uppercase; letter-spacing: 2px;">Change Password</label>
-                    </div>
-                
-                    <div class="form-group">
-                        <label for="password">New Password</label>
-                        <input type="password" id="password" name="password" style="width: calc(100% - 16px); padding: 8px; box-sizing: border-box; margin-bottom: 25px;" />
-                    </div>
-                    
-                    <div class="form-group">
-                        <input type="submit" value="Change Password" />
-                    </div>
-
-                    <div class="card2">
-                      <h2>Latest Transactions</h2>
-                      <ul id="latestTransactions"></ul>
-                    </div>
-                </form>
-            </div>            
-                    
-        </section>
-=======
         input[type="password"],
         input[type="submit"] {
             border: 1px solid #ccc;
@@ -220,7 +128,6 @@
           <canvas id="accountBalanceChart"></canvas>
         </div>
     </section>
->>>>>>> ddf47fc91d5010fce6d10a16620f189549202b8e
 </main>
 
 </body>
