@@ -90,6 +90,10 @@ app.get('/intro', (req, res) => {
   res.render('pages/portfolio')
  });
 
+ app.get('/quiz', (req, res) => {
+  res.render('pages/quiz')
+ });
+
  app.get('/home', async (req, res) => {
   try {
     const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; 
