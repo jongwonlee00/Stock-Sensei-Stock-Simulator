@@ -66,10 +66,43 @@
                     <div class="form-group">
                         <input type="submit" value="Change Password" />
                     </div>
+
+                    <div class="card">
+                      <h2>Latest Transactions</h2>
+                      <ul id="latestTransactions"></ul>
+                    </div>
                 </form>
             </div>            
                     
         </section>
 </main>
+<script>
+  // Function to fetch and display the latest transactions
+  async function displayLatestTransactions() {
+      try {
+          const response = await fetch('/transactions');
+          const transactions = await response.json();
+
+          // Extract the latest three transactions
+          const latestTransactions = transactions.slice(0, 3);
+
+          // Get the element where you want to display the transactions
+          const transactionsList = document.getElementById('latestTransactions');
+
+          // Update the HTML content with the latest transactions
+          latestTransactions.forEach(transaction => {
+              const listItem = document.createElement('li');
+              listItem.textContent = `Transaction ID: ${transaction.transaction_id}, Type: ${transaction.transaction_type}, Amount: $${transaction.transaction_price}`;
+              transactionsList.appendChild(listItem);
+          });
+
+      } catch (error) {
+          console.error('Error fetching latest transactions:', error);
+      }
+  }
+
+  // Call the function to display the latest transactions on page load
+  displayLatestTransactions();
+</script>
 
 <%- include ('../partials/footer') %>

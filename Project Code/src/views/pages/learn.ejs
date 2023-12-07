@@ -43,6 +43,13 @@
             right: 0;
             padding: 0px;
         }
+        .font{
+          font-family: Garamond, serif;
+          width: 1300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
         .overlay-image{
             position: absolute;
             bottom: 0;
@@ -52,6 +59,8 @@
             background-position: center;
             background-size: cover;
             opacity: 0.9;
+            filter:blur(4px);
+            max-height: 220px;
         }
         /* End Carousel Classes */
         body {
@@ -73,10 +82,9 @@
           </button>
           <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="navbar-nav me-auto">
-              <!-- 
-                come back to this:
-                img src="Project Code/src/resources/img/logo.png">
-               -->
+              
+                <!--come back to this:
+                img src="Project Code/src/resources/img/logo.png"> -->
               <li class="nav-item">
                   <a class="nav-link" href="/home">Home</a>
               </li>
@@ -96,9 +104,10 @@
           </div>
         </div>
       </nav>
+     
     
 
-      <!-- CAROUSEL STUFF -->
+      <!-- CAROUSEL STUFF  | NavNews is API req -->
     <div id="myCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <ol class="carousel-indicators">
             <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
@@ -108,30 +117,30 @@
 
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <div class="overlay-image" style="filter: blur(4px); background-image:url(https://image.cnbcfm.com/api/v1/image/107197771-1677013633721-aa9_img_100_99_112_1957665_1000-1677013543660.jpg?v=1677013972&w=1920&h=1080);"></div>
+            <div class="overlay-image" style="background-image:url(<%= NavNews[3].image %>);"></div>
             <div class="container1">
-            <h1 style="position:relative; top:80px;">Dow is Down</h1>
-            <a href="https://www.wsj.com/livecoverage/stock-market-today-dow-jones-11-28-2023.com" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 30px; left: -300px; background-color: black;"> 
+            <h1 class="font" style="position:relative; top:80px;"><%= NavNews[3].headline %></h1>
+            <a href="<%= NavNews[3].url %>" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 30px; left: -300px; background-color: black;"> 
                 Original Article
             </a>
         </div>
         </div>
 
         <div class="carousel-item">
-            <div class="overlay-image" style="filter: blur(4px); background-image:url(https://image.cnbcfm.com/api/v1/image/107335794-17002401912023-11-17t164714z_426653754_rc22f4acqawi_rtrmadp_0_usa-stocks.jpeg?v=1700240264&w=740&h=416&ffmt=webp&vtcrop=y);"></div>
+            <div class="overlay-image" style="background-image:url(<%= NavNews[4].image %>);"></div>
         <div class="container1">
-            <h1 style="position:relative; top:80px;">Live Market Updates, 11/28/2023</h1>
-            <a href="https://www.cnbc.com/2023/11/27/stock-market-today-live-updates.html" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 30px; left: -300px; background-color: black;"> 
+            <h1 class="font" style="position:relative; top:80px;"><%= NavNews[4].headline %></h1>
+            <a href="<%= NavNews[4].url %>" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 30px; left: -300px; background-color: black;"> 
                 Original Article
             </a>
         </div>
         </div>
 
         <div class="carousel-item">
-            <div class="overlay-image" style="filter: blur(4px); background-image:url(https://image.cnbcfm.com/api/v1/image/107284771-1691691417880-gettyimages-957832072-hongkong-victoria-harbour.jpeg?v=1695858675&w=740&h=416&ffmt=webp&vtcrop=y);"></div>
+            <div class="overlay-image" style="background-image:url(<%= NavNews[5].image %>);"></div>
             <div class="container1">
-                <h1 style="position:relative; top:80px;">Oil Rebound Eases</h1>
-                <a href="https://www.cnbc.com/2023/11/28/asia-markets-largely-set-for-slight-rebound-oil-eases-slightly-on-israel-hamas-truce-extension.html" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 30px; left: -300px; background-color: black;"> 
+                <h1 class="font" style="position:relative; top:80px;"><%= NavNews[5].headline %></h1>
+                <a href="<%= NavNews[5].url %>" class="btn btn-lg btn-primary" style="float: right; width: 10%; position: relative; top: 30px; left: -300px; background-color: black;"> 
                     Original Article
                 </a>
             </div>
@@ -163,7 +172,9 @@
         </div>
       <div class="col-4">
         <div class="card" id="card-2">Fundamentals</div>
+        <a href="/fundamentals">
         <img src="Fundamentals.jpeg" class="card-img-top" alt="..."  width="400" height="200">
+       </a>
         <div class="card-body" >
             <h5 class="card-title">Understand the Fundamentals of Companies</h5>
             <p class="card-text">Stocks represent a portion of a company, understand how to value a company and its future direction.</p>
@@ -171,7 +182,9 @@
       </div>
       <div class="col-4">
         <div class="card" id="card-3">Technical Analysis</div>
+        <a href="/technical">
         <img src="Technical.jpeg" class="card-img-top" alt="..."  width="400" height="200">
+        </a>
         <div class="card-body" >
             <h5 class="card-title">Using statistics and machine learning.</h5>
             <p class="card-text">Learn technical analisis to forecast stock movments</p>
@@ -179,7 +192,9 @@
       </div>
       <div class="col-4">
         <div class="card" id="card-3">Portfolio Manager</div>
+        <a href="/portfolio">
         <img src="Portfolio.jpeg" class="card-img-top" alt="..."  width="400" height="200">
+        </a>
         <div class="card-body" >
             <h5 class="card-title">Managing your risk</h5>
             <p class="card-text">Here you will learn how to manage the risk in your portfolio. </p>
@@ -203,4 +218,4 @@
   </body>
 </html>
 
-<%- include ('../partials/footer') %>
+<%- include ('../partials/footer') %></meta>

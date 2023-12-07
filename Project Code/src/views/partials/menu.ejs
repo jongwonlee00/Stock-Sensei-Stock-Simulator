@@ -3,32 +3,15 @@
 <html lang="en">
 <head>
     <style>
-      #stockSymbolInput {
-        padding: 8px; /* Adjust padding as needed */
-        border: 1px solid #ccc;
-        border-radius: 10px; /* Adjust the border-radius for the desired roundness */
-        margin-right: 10px; /* Add some space between the input and the button */
-    }
-
-    #searchButton {
-        padding: 8px 12px; /* Adjust padding as needed */
-        border: 1px solid #52cb8d; /* Adjust the border color */
-        border-radius: 10px; /* Adjust the border-radius for the desired roundness */
-        background-color: #52cb8d; /* Adjust the background color */
-        color: white; /* Adjust the text color */
-        cursor: pointer;
-    }
-
-    #stockPriceDropdown {
-        padding: 8px; /* Adjust padding as needed */
-        border: 1px solid #ccc;
-        border-radius: 10px; /* Adjust the border-radius for the desired roundness */
-    }
     .navbar-nav .nav-link {
         color: #4CAF50; 
         transition: color 0.3s; 
+        font-family: 'Arial', sans-serif;
+        font-weight: 800;
     }
-    
+    img{
+        height: 45px;
+    }
     .navbar-nav .nav-link:hover {
         color: #c1ff72; 
     }
@@ -44,34 +27,27 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbar-collapse">
-                    <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <img src="https://i.pinimg.com/originals/81/38/b4/8138b48c17d36c563c42e27fb069c16d.png" alt="Stock Sensei Logo">
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/home">Home</a>
                         </li>
-                        <div class="nav-item me-1">
-                              <a class="nav-link" href="/invest">Invest</a>
-                        </div>
-                        <div class="nav-item me-1">
-                          <a class="nav-link" href="/portfolio">Portfolio</a>
-                        </div>
-                        <div class="nav-item me-1">
-                              <a class="nav-link" href="/learn">Learn</a>
-                        </div>
-                        <div class="nav-item me-1">
-                              <a class="nav-link" href="/account">Account</a>
-                        </div>
-                        <div class="nav-item me-1">
-                          <a class="nav-link" href="/logout">Logout</a>
-                        </div>
-                        <div>
-                          <input type="text" id="stockSymbolInput" placeholder="e.g., AAPL">
-                          <button id="searchButton">Search</button>
-              
-                          <!-- Add a dropdown to display stock prices -->
-                          <select id="stockPriceDropdown">
-                              <!-- Options will be dynamically added using JavaScript -->
-                          </select>
-                      </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/invest">Invest</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/learn">Learn</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/account">Account</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -11,7 +11,7 @@ const pgp = require('pg-promise')(); // To connect to the Postgres DB from the n
 const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcrypt'); //  To hash passwords
-const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
+const axios = require('axios'); // To make HTTP requests from our server. We'll know more about it in Part B.
 const { request } = require('chai');
 
 // *****************************************************
@@ -92,9 +92,16 @@ app.get('/intro', (req, res) => {
 
  app.get('/home', async (req, res) => {
   try {
-    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; // Replace with your Finnhub API key
+    const apiKey = 'cl9s089r01qk1fmlilp0cl9s089r01qk1fmlilpg'; 
+    const marketStatusResponse = await axios.get('https://finnhub.io/api/v1/stock/market-status', {
+      params: {
+        exchange: 'US',
+        token: apiKey,
+      },
+    });
 
-    const { data } = await axios.get('https://finnhub.io/api/v1/news', {
+    const marketStatus = marketStatusResponse.data;
+    const newsResponse = await axios.get('https://finnhub.io/api/v1/news', {
       params: {
         token: apiKey,
         category: 'general',
@@ -103,7 +110,30 @@ app.get('/intro', (req, res) => {
       },
     });
 
-    const marketNews = data; // Correct variable name
+    const stockResponseAAPL = await axios.get('https://finnhub.io/api/v1/quote?symbol=AAPL', {
+      params: {
+        token: apiKey,
+        symbol: 'AAPL',
+      },
+    });
+    const stockResponseTSLA = await axios.get('https://finnhub.io/api/v1/quote?symbol=TSLA', {
+      params: {
+        token: apiKey,
+        symbol: 'TSLA',
+      },
+    });
+    const stockResponseMSFT = await axios.get('https://finnhub.io/api/v1/quote?symbol=MSFT', {
+      params: {
+        token: apiKey,
+        symbol: 'MSFT',
+      },
+    });
+ 
+    const tsla = stockResponseTSLA.data;
+    const aapl = stockResponseAAPL.data;
+    const msft = stockResponseMSFT.data;
+
+    const marketNews = newsResponse.data;
     const formattedNews = marketNews.map(news => {
       return {
         headline: news.headline,
@@ -112,12 +142,27 @@ app.get('/intro', (req, res) => {
       };
     });
 
-    res.render('pages/home', { events: formattedNews });
-  } catch (error) {
+    const result = await db.query(`
+        SELECT
+            COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) -
+            COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
+        FROM
+            Transactions t
+        WHERE
+            t.user_id = $1;
+    `, [req.session.user.user_id]);
+
+    let accountBalance = result.account_balance;
+    if (accountBalance == null) accountBalance = 0;
+    accountBalance = accountBalance + 50000;
+
+    res.render('pages/home', { user: req.session.user, accountBalance, events: formattedNews, marketStatus, tsla, aapl, msft});
+} catch (error) {
     console.error('Error fetching data:', error.message);
     res.status(500).send('Internal Server Error');
-  }
-});
+}
+ });
+ 
 
 app.get('/register', (req,res) => {
  //register
@@ -128,6 +173,7 @@ app.get('/login', (req, res) => {
   const password = req.body
   res.render('pages/login');
 });
+
 app.get('/account', async (req, res) => {
   try {
     const result = await db.query(`
@@ -151,9 +197,29 @@ app.get('/account', async (req, res) => {
   }
 });
 
- app.get('/learn', (req,res) => {
-  //register
-  res.render('pages/learn')
+ app.get('/learn', async (req,res) => {
+  try {
+    const apiKey = 'clkkmapr01qkcrcfurv0clkkmapr01qkcrcfurvg'; // Finnhub API key
+
+    var { data }  = await axios.get(`https://finnhub.io/api/v1/news`, { //call to finnhub api
+      params: {
+        token: apiKey,
+        category: 'general',
+        minId: 0,
+      },
+    });
+
+    const NavNews = data; //take data into something we can uss
+    
+    // console.log(NavNews[0].headline); --testing stuff
+
+    res.render('pages/learn', { NavNews })
+    //res.json({ stockCandleData, stockSymbol });
+  } catch (error) {
+    console.error('Error fetching stock news:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+  
  });
 
 //Register endpoint
@@ -260,11 +326,6 @@ app.post('/transactShares', async (req, res) => {
       FROM Stocks
       WHERE name = $1
     `, [req.body.stock_name]);
-    const portfolio_id = await db.query(`
-      SELECT portfolio_id
-      FROM Portfolio
-      WHERE user_id = $1
-    `, [req.session.user.user_id]);
 
     const user_id= await db.query(`
       SELECT user_id
@@ -275,13 +336,12 @@ app.post('/transactShares', async (req, res) => {
     const result = await db.query(`
       INSERT INTO Transactions
         (user_id,
-        portfolio_id,
         stock_id,
         transaction_type,
         transaction_date,
         transaction_price)
-      VALUES ($1, $2, $3, $4, $5, $6)
-    `, [user_id, portfolio_id, stock_id, type, transact_date, share_price]);
+      VALUES ($1, $2, $3, $4, $5)
+    `, [user_id,  stock_id, type, transact_date, share_price]);
     res.send('Transaction completed successfully');
   }catch (err) {
     console.error('Unable to buy shares.', err);
@@ -317,7 +377,7 @@ app.get('/user', auth, async (req, res) => {
 app.get('/transactions', auth, async (req, res) => {
   try {
     const userId = req.session.user.user_id;
-    const result = await db.query('SELECT * FROM transaction WHERE user_id = $1', [userId]);
+    const result = await db.query('SELECT * FROM transactions WHERE user_id = $1', [userId]);
     const transactions = result.rows;
     res.json(transactions);
   } catch (error) {
@@ -344,7 +404,7 @@ app.get('/user_balance', async (req, res) => {
     balance = balance + 50000;
 
     res.json(balance);
-  } catch (err){
+  } catch (error){
     console.error('Error fetching balance:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
