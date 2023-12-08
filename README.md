@@ -41,6 +41,8 @@ or go to your docker application and open the site from there.
 
 #### How to Run Tests
 
+tests run automatically when application is run
+
 ### Link to Deployed Application
 ****
 [Link to Deployed Website](http://recitation-13-team-7.eastus.cloudapp.azure.com:3000)
