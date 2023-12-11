@@ -57,7 +57,7 @@
         }
 
         .card {
-            width: calc(90% + 36px);
+            width: calc(90% + 56px);
             box-sizing: border-box;
             border: 1px solid #ddd;
             padding: 55px;
@@ -102,6 +102,15 @@
 <main>
     <h1><p><%= user.username %>'s Account</p></h1>
     <section class="card-container">
+      <!-- <div class="card three">
+        <h2>Latest Transactions</h2>
+        <ul id="latestTransactions"></ul>
+      </div> -->
+      <div class="card h2">
+        <h2>Investment Portfolio</h2>
+        <p>Account Balance: $ <%= accountBalance %></p>
+        <canvas id="accountBalanceChart"></canvas>
+      </div>
         <!-- Account Card -->
         <div class="card">
 
@@ -119,13 +128,6 @@
                     <input type="submit" value="Change Password" />
                 </div>
             </form>
-        </div>
-
-        <!-- Portfolio Card -->
-        <div class="card h2">
-          <h2>Investment Portfolio</h2>
-          <p>Account Balance: $ <%= accountBalance %></p>
-          <canvas id="accountBalanceChart"></canvas>
         </div>
     </section>
 </main>
@@ -160,34 +162,28 @@
       }
   }
 
-  // Call the function to display the latest transactions on page load
-  displayLatestTransactions();
-
   function initializeChart(accountBalance) {
         const ctx = document.getElementById('accountBalanceChart').getContext('2d');
 
-        const etfBalance = 50000;
-        const stocksBalance = 50000;
-        const cashBalance = 50000;
+        const appleBalance = 4850;
+        const teslaBalance = 6010;
+        const cocaBalance = 1462;
+        const cashBalance = accountBalance - appleBalance - teslaBalance - cocaBalance;
 
-        /*
-        const etfBalance = 0;
-        const stocksBalance = currentIndex * currentAmount;
-        const cashBalance = 50000 - etfBalance - stocksBalance;
-        */
 
         const data = {
             labels: [
                 'Cash',
-                'ETF',
-                'Stocks'
+                'AAPL',
+                'TSLA',
+                'KO'
             ],
             datasets: [{
                 width: "10px",
                 height: "10px",
                 label: 'Current balance : ',
-                data: [cashBalance, etfBalance, stocksBalance],
-                backgroundColor: ['pink', 'purple', 'cyan'], 
+                data: [cashBalance, appleBalance, teslaBalance, cocaBalance],
+                backgroundColor: ['pink', 'cyan', 'purple', 'blue'], 
                 borderradius: 10, /* Optional: Add border-radius for rounded corners */
                 borderWidth: 5,
                 weight: 2,
@@ -215,6 +211,36 @@
     }
 
     initializeChart(<%= accountBalance %>);
+</script>
+
+<script>
+    // Function to fetch and display the latest transactions
+    async function displayLatestTransactions() {
+        try {
+            const response = await fetch('/transactions');
+            const transactions = await response.json();
+  
+            // Extract the latest three transactions
+            const latestTransactions = transactions.slice(0, 3);
+  
+            // Get the element where you want to display the transactions
+            const transactionsList = document.getElementById('latestTransactions');
+  
+            // Update the HTML content with the latest transactions
+            latestTransactions.forEach(transaction => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Transaction ID: ${transaction.transaction_id}, Type: ${transaction.transaction_type}, Amount: $${transaction.transaction_price}`;
+                transactionsList.appendChild(listItem);
+            });
+  
+        } catch (error) {
+            console.error('Error fetching latest transactions:', error);
+        }
+    }
+  
+    // Call the function to display the latest transactions on page load
+    displayLatestTransactions();
+
 </script>
 
 <%- include ('../partials/footer') %>

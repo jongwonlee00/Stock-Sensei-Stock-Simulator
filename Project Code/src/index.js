@@ -1,5 +1,11 @@
+/*
+Section 1: Import the necessary dependencies. Remember to check what each dependency does.
+Section 2: Connect to DB: Initialize a dbConfig variable that specifies the connection information for the database. The variables in the .env file can be accessed by using process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD and process.env.API_KEY.
+Section 3: App Settings
+Section 4: This is where you will add the implementation for all your API routes
+Section 5: Starting the server and keeping it active.
 
-
+*/
 
 // *****************************************************
 // <!-- Section 1 : Import Dependencies -->
@@ -241,7 +247,7 @@ app.post('/register', async (req, res) => {
     }
 
     // Username doesn't exist, proceed with registration
-    const insertQuery = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;';
+    const insertQuery = 'INSERT INTO users (username, password) VALUES ($1, $2);';
     const data = await db.one(insertQuery, [username, hash]);
 
     // Registration successful, redirect to login with success message
@@ -363,7 +369,7 @@ const auth = (req, res, next) => {
 
 
 // Authentication Required
-//app.use(auth);
+app.use(auth);
 
 app.get('/user', auth, async (req, res) => {
   try {
@@ -395,8 +401,8 @@ app.get('/user_balance', async (req, res) => {
     const user_id = req.session.user.user_id;
     const result = await db.query(`
     SELECT
-      COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) -
-      COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
+      COALESCE(SUM(CASE WHEN t.transaction_type = 'sell' THEN t.transaction_price ELSE 0 END), 0) -
+      COALESCE(SUM(CASE WHEN t.transaction_type = 'buy' THEN t.transaction_price ELSE 0 END), 0) AS account_balance
     FROM
       Transactions t
     WHERE
@@ -469,6 +475,7 @@ app.get('/invest', async (req, res) => {
   }
 });
 
+/*
 
 // API call for stock search
 app.get('/stockData', async (req, res) => {
@@ -501,6 +508,43 @@ app.get('/stockData', async (req, res) => {
   } catch (error) {
     console.error('Error fetching stock candle data:', error.message);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+*/
+
+// API Call for pie chart in Portfolio
+
+// API Call for pie chart in Portfolio
+app.get('/portfolio', async (req, res) => {
+  try {
+    // Define the data object
+    const data = {
+      labels: ['Red', 'Blue', 'Yellow'],
+      datasets: [{
+        label: 'My First Dataset',
+        data: [300, 50, 100],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4
+      }]
+    };
+
+    // Configure the chart
+    const config = {
+      type: 'doughnut',
+      data: data,
+    };
+
+    // Send the response
+    res.json(config);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
