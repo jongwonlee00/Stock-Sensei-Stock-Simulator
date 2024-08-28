@@ -1,4 +1,4 @@
-## Software Development 3308 Recitation 013 Team 07
+## Software Development Tool Stock Sensei
 ****
 ### Contributers (name - identikey - githubUser)
 *Jongwon Lee - jole2550 - @jongwonlee00
